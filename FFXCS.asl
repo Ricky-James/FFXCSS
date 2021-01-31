@@ -9,6 +9,9 @@ state("FFX")
     int xCoords: "FFX.exe", 0xF25D80;
     int yCoords: "FFX.exe", 0xF25D78;
     byte camera: "FFX.exe", 0xD3818C;
+
+    byte fade: "FFX.exe", 0xF3080C;
+    byte menu: "FFX.exe", 0xF407E4;
 }
 
 startup
@@ -29,7 +32,9 @@ startup
 									{ { 193, 1154 }, { 135, 1190 } }, // Skip Farplane
 									{ { 135, 1190 }, { 135, 1310 } }, // Skip Guadosalam Exit
 									{ { 264, 1315 }, { 263, 1418 } } // Inn Sleep
-									};//188/1045
+									};
+    // Not skipped:
+    // Ixion fayth room, B&Y, Rikku/Lightning
 }
 
 update
@@ -351,6 +356,15 @@ update
     //}
 	
 	// Roosta's additions, beginning post-Gui
+    //if (current.roomNumber == 164)
+    short zone = 221;
+    if(old.menu == 1 && current.menu == 0) // If you're leaving a menu
+    {
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 248); // Set the zone
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1455); // Set the story
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);   // Force a fade
+    }
+
 	// Add Rikku to the party
 	byte temp;
 	if(current.roomNumber == 109 && old.roomNumber == 189)
