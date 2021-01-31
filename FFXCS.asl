@@ -13,6 +13,27 @@ state("FFX")
     int button: "FFX.exe", 0x8CB170;
 }
 
+startup
+{
+	// Putting a tooltip so you can see if the file is loading
+	settings.Add("check", true, "Code compiled!");
+	
+	vars.arrayRS = new short[,,]{	{ { 93, 960 }, { 93, 962 } }, // Leave MRR -> Djose
+									{ { 76, 962 }, { 76, 990 } }, // Djopse -> Trials
+									{ { 214, 990 }, { 214, 995 } }, // Trials -> Chamber
+									{ { 161, 1010 }, { 161, 1032 } }, // Wake Yuna -> Moonflow
+									{ { 105, 1032 }, { 105, 1045 } }, // Moonflow/Shoopuff
+									{ { 291, 1045 }, { 99, 1060 } }, // Pre-Extractor
+									{ { 291, 1060 }, { 236, 1070 } }, // Post-Extractor
+									{ { 189, 1070 }, { 189, 1085 } }, // Remove Rikku's appearance
+									{ { 97, 1085 }, { 97, 1104 } }, // Post-Rikku to Seymour's Room
+									{ { 141, 1104 }, { 163, 1154 } }, // Seymour's Room to Farplane
+									{ { 193, 1154 }, { 135, 1190 } }, // Skip Farplane
+									{ { 135, 1190 }, { 135, 1310 } }, // Skip Guadosalam Exit
+									{ { 264, 1315 }, { 263, 1418 } } // Inn Sleep
+									};//188/1045
+}
+
 update
 {
    
@@ -340,6 +361,33 @@ update
     //    game.WriteValue(modules.First().BaseAddress+0xD2D67C, 425);
     //    game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1);
     //}
+	
+	// Roosta's additions, beginning post-Gui
+	// Add Rikku to the party
+	byte temp;
+	if(current.roomNumber == 109 && old.roomNumber == 189)
+	{
+		temp = 6;
+		game.WriteValue(modules.First().BaseAddress+0xD2D67C+0x3170, temp);
+		temp = 0;
+		game.WriteValue(modules.First().BaseAddress+0xD2D67C-0xB1B, temp);
+		temp = 11;
+		game.WriteValue(modules.First().BaseAddress+0xD2D67C+0x3170+0x1C14, temp);
+	}
+	
+	// Loop for going over skip array
+	short sVal;
+	for(int i = 0; i < vars.arrayRS.Length; i++)
+	{
+		if(current.roomNumber == vars.arrayRS[i,0,0] && current.storyline == vars.arrayRS[i,0,1])
+		{
+			sVal = vars.arrayRS[i,1,0];
+			game.WriteValue(modules.First().BaseAddress+0xD2CA90, sVal);
+			sVal = vars.arrayRS[i,1,1];
+			game.WriteValue(modules.First().BaseAddress+0xD2D67C, sVal);
+			print("Skipping from arrayRS!");
+		}
+	}
     
     //if (current.roomNumber == 121 && current.storyline == 486)
     //{
@@ -396,4 +444,4 @@ update
     }
     
     return true;
-} 
+}
