@@ -6,66 +6,28 @@ state("FFX")
     
     short intro: "FFX.exe", 0x922D64;
 
-    short input: "FFX.exe", 0x8CB170;
-    float xCoords: "FFX.exe", 0xF25D80;
-    float yCoords: "FFX.exe", 0xF25D78;
+    int xCoords: "FFX.exe", 0xF25D80;
+    int yCoords: "FFX.exe", 0xF25D78;
     byte camera: "FFX.exe", 0xD3818C;
-
-    byte fade: "FFX.exe", 0xF3080C;
-    byte menu: "FFX.exe", 0xF407E4;
-    int HP_Enemy_A: "FFX.exe", 0xD34460, 0x5D0;
-
-    byte movementLock: "FFX.exe", 0xF25B63;
-    byte musicID: "FFX.exe", 0xF2FF1C;
-    float cameraRot: "FFX.exe", 0x8A858C;
-}
-
-startup
-{
-	// Putting a tooltip so you can see if the file is loading
-	settings.Add("check", true, "Code compiled!");
-	
-    // Arrays are { {room_0, story_0}, {room_1, story_1} }
-	vars.arrayRS = new short[,]{	{ 93, 960, 93, 962 }, // Leave MRR -> Djose
-									{ 76, 962, 76, 990 }, // Djopse -> Trials
-									{ 214, 990, 214, 995 }, // Trials -> Chamber
-									{ 161, 1010, 161, 1032 }, // Wake Yuna -> Moonflow
-									{ 105, 1032, 105, 1045 }, // Moonflow/Shoopuff
-									{ 291, 1045, 99, 1060 }, // Pre-Extractor
-									{ 291, 1060, 236, 1070 }, // Post-Extractor
-									{ 189, 1070, 189, 1085 }, // Remove Rikku's appearance
-									{ 97, 1085, 97, 1104 }, // Post-Rikku to Seymour's Room
-									{ 141, 1104, 163, 1154 }, // Seymour's Room to Farplane
-									{ 193, 1154, 135, 1190 }, // Skip Farplane
-									{ 135, 1190, 135, 1310 }, // Skip Guadosalam Exit
-									{ 264, 1315, 263, 1418 } // Inn Sleep
-									};
-    // Not skipped:
-    // Ixion fayth room, B&Y, Rikku/Lightning
-
-    // Arrays are {HP, story_0, room_1, story_1, spawn_1}
-    vars.bossRS = new short[,]{       {12000, 1420, 221, 1470, 2}/*, // Spherimorph
-                                    {70000, 2555, 285, 2585, 2}  // Flux */
-                                    };
-    vars.boss_fight = -1;
+    
+    int button: "FFX.exe", 0x8CB170;
 }
 
 update
 {
-
-    if(current.input == 2063)
-    {
-        print("Soft reset");
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
-        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);
-    }
-
-    if (current.roomNumber == 348)
+   
+    if (current.roomNumber == 348 && current.storyline == 0)
     {
         print("Skip Intro");
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
     }
-
+    
+    if(current.button == 503318543) // L1 + L2 + R1 + R2 + Start
+    {
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);
+    }
+    
     //print(current.intro.ToString());
     //print(memory.ReadValue<byte>(modules.First().BaseAddress + 0xB8D7D9).ToString());
     // START OF ZANARKAND
@@ -109,7 +71,7 @@ update
         print("Sinspawn Ammes?");
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 15);
     }
-    if (current.roomNumber == 367)
+    if (current.roomNumber == 367 && current.storyline == 16)
     {
         print("Zanarkand - Tidus sees Jecht sign again");
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 18);
@@ -133,6 +95,7 @@ update
         // TO DO - Tidus spawns standing and not swimming
         print("Baaj Temple - Tidus wakes up");
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 42);
+        game.WriteValue(modules.First().BaseAddress+0xEA2280+0x184, 131584);
     }
     if (current.roomNumber == 49 && current.storyline == 44)
     {
@@ -220,16 +183,12 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 128);
     }
     // TO DO Tidus meets the Crusaders
-    if (current.roomNumber == 69 && current.storyline == 128 && current.camera == 0)
-    {
-        print("Besaid - Tidus meets the Crusaders");
-        //game.WriteValue(modules.First().BaseAddress+0xF00740, 283768848);
-        //game.WriteValue(modules.First().BaseAddress+0xF25B60, 550017163);
-        //game.WriteValue(modules.First().BaseAddress+0xF00740, 48);
-        //game.WriteValue(modules.First().BaseAddress+0xF25B63, 32);
-        //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 130);
-        //game.WriteValue(modules.First().BaseAddress+0xD3818C, 1);
-    }
+    //if (current.roomNumber == 69 && current.storyline == 128 && current.camera == 0)
+    //{
+    //    print("Besaid - Tidus meets the Crusaders");
+    //    game.WriteValue(modules.First().BaseAddress+0x153BF74, 6);
+    //    game.WriteValue(modules.First().BaseAddress+0xD3818C, 1);
+    //}
     //if (current.roomNumber == 133 && current.storyline == 130)
     //{
     //    print("Besaid - Tidus arrives at Besaid Village");
@@ -381,201 +340,60 @@ update
     //    game.WriteValue(modules.First().BaseAddress+0xD2D67C, 425);
     //    game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1);
     //}
-	
-	// Roosta's additions, beginning post-Gui
-    // Cereth's Soft
-    if(game.ReadValue<sbyte>(modules.First().BaseAddress+0xF4080C) > 0)
-    {
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
-        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);
-    }
-
-	// Add Rikku to the party
-	byte temp;
-	if(current.roomNumber == 109 && old.roomNumber == 189)
-	{
-		temp = 6;
-		game.WriteValue(modules.First().BaseAddress+0xD2D67C+0x3170, temp);
-		temp = 0;
-		game.WriteValue(modules.First().BaseAddress+0xD2D67C-0xB1B, temp);
-		temp = 11;
-		game.WriteValue(modules.First().BaseAddress+0xD2D67C+0x3170+0x1C14, temp);
-	}
-	
-	// Loop for going over skip array
-	short sVal;
-	for(int i = 0; i < vars.arrayRS.GetLength(0); i++)
-	{
-		if(current.roomNumber == vars.arrayRS[i, 0] && current.storyline == vars.arrayRS[i, 1])
-		{
-			sVal = vars.arrayRS[i, 2];
-			game.WriteValue(modules.First().BaseAddress+0xD2CA90, sVal);
-
-			sVal = vars.arrayRS[i, 3];
-			game.WriteValue(modules.First().BaseAddress+0xD2D67C, sVal);
-
-			print("Skipping from arrayRS!");
-		}
-	}
-
-    // Loop for going over boss array
-    //{12000, 1420, 221, 1470, 2}
-    for(int i = 0; i < vars.bossRS.GetLength(0); i++)
-	{
-        // Set boss_fight to be true if you enter a boss fight
-		if(current.HP_Enemy_A == vars.bossRS[i,0] && current.storyline == vars.bossRS[i,1])
-		{
-			vars.boss_fight = i;
-		}
-
-        if(vars.boss_fight != -1 && current.menu == 0 && old.menu == 1)
-        {
-            sVal = vars.bossRS[i, 2];
-            game.WriteValue(modules.First().BaseAddress+0xD2CA90, sVal); // Set the zone
-            
-            sVal = vars.bossRS[i, 3];
-            game.WriteValue(modules.First().BaseAddress+0xD2D67C, sVal); // Set the story
-            
-            sVal = vars.bossRS[i, 4];
-            game.WriteValue(modules.First().BaseAddress+0xD2CA9C, sVal); // Set the spawn
-            
-            game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); // Force a fade
-            
-            vars.boss_fight = -1;
-        }
-	}
-
-    //if (current.roomNumber == 164)
-    if(old.menu == 1 && current.menu == 0) // If you're leaving a menu
-    {
-        //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 248); // Set the zone
-        //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1455); // Set the story
-        //game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);   // Force a fade
-    }
-
-// HIGHBRIDGE
-
-    if (current.roomNumber == 208 && current.storyline == 2220)
-    {
-        print("Enter Highbridge");
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 208);
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2275);
-        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 2);
-    }
-
-    if (current.roomNumber == 183 && current.storyline == 2290)
-    {
-        // 0:35
-        print("Natus Death");
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 183);
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2300);
-        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0);
-    }
-
-    if (current.roomNumber == 206 && current.storyline == 2300)
-    {
-        print("Lake skip");
-        current.cutsceneFlag = 1;
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 177);
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2385);
-        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1);
-    }
-
-    // CALM LANDS
-
-    if (current.roomNumber == 223 && current.storyline == 2385)
-    {
-        print("Calm lands intro");
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2400);
-
-        //Sunken cave cutscenes (gorge + entry. Set 32 for gorge only)
-        game.WriteValue(modules.First().BaseAddress+0xD2CD09, 36);
-    }
-
-    if (current.roomNumber == 279 && current.storyline == 2420)
-    {
-        //Defender X death
-        
-        //Check position is high enough (over the bridge) + Movement is locked
-        if(current.xCoords > 250.0f && current.movementLock == 48)
-        {
-            print("Yuna skip + Kelk");
-            
-            game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn
-            game.WriteValue(modules.First().BaseAddress+0xD2CA90, 259); //Area
-            game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force Load
-            game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2510); //Story
- 
-        }
-    }
-
-    // GAGAZET
-    if(current.roomNumber == 259 && current.storyline == 2510
-    && game.ReadValue<byte>(modules.First().BaseAddress+0xD27C88) == 70)
-    {
-        print("Ronso death + Ronso singing");
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2530);
-        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force Load
-        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
-    }
-
     
-    //TODO: Add back in the flashback movement
-
-    if (current.roomNumber == 285 && current.storyline == 2555)
-    { 
-        print("Flux to Sanctuary Keeper");
-        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2585); //Cutscene ID
-        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 2); //Spawn
-    }
-
-    if (current.roomNumber == 311 && current.storyline == 2625)
+    //if (current.roomNumber == 121 && current.storyline == 486)
+    //{
+    //    print("Luca - Tournament begins");
+    //    game.WriteValue(modules.First().BaseAddress+0xD2CA90, 77);
+    //    game.WriteValue(modules.First().BaseAddress+0xD2D67C, 492);
+    //   game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1);
+    //}
+    
+    if (current.roomNumber == 121 && current.storyline == 508)
     {
-        print("Sanc Keeper dead -> Zanarkand Trials");
-        
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 361); //AreaID
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2767); //CutsceneID
-        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
-        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn
+        print("Luca - Aurochs win the game");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 88);
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 514);
     }
     
-    if (current.roomNumber == 318 && current.storyline == 2790)
+    if (current.roomNumber == 95 && current.storyline == 730)
     {
-        print("Sanc Keeper Dead -> Pre-Yunalesca");
-        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2815);
-    }
-
-    if (current.roomNumber == 270 && current.storyline == 2835)
-    {
-        print("Post-Yunalesca -> Pre-Airship");
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2850); //CutsceneID
-    }
-
-    // Camera pans to look at Sin
-    
-    if (current.roomNumber == 315 && current.storyline == 2850)
-    {
-        print("Zanarkand -> Airship");
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 194); //AreaID
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2900); //CutsceneID
-        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
-        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 2); //Spawn
-    }
-
-    if (current.roomNumber == 211 && current.storyline == 2900 && current.xCoords == -9.918679f)
-    {
-        print("Yuna/Kimahri dialogue");
-        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 7); //Spawn
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2915); //CutsceneID
-        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+        print("Mi'ihen - Tidus runs up the stairs");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 750);
     }
     
-
+    if (current.roomNumber == 58 && current.storyline == 750)
+    {
+        print("Mi'ihen - Reset it back to avoid a sequence break!");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 734);
+    }
     
-
-
+    if (current.roomNumber == 112 && current.storyline == 755)
+    {
+        print("Mi'ihen - Tidus chats with Yuna");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 171);
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 760);
+    }
+    
+    if ((current.roomNumber == 79 && current.storyline == 787) || (current.roomNumber == 79 && current.storyline == 815 && current.spawnPoint == 2))
+    {
+        print("MRR - Tidus distrusts Seymour");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 825);
+    }
+    
+    if (current.roomNumber == 119 && current.storyline == 825)
+    {
+        print("MRR - Preparing for Sin");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 845);
+    }
+    
+    if ((current.roomNumber == 218 && current.storyline == 902) || (current.roomNumber == 247 && current.storyline == 899))
+    {
+        print("MRR - Chasing after Sin");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 131);
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 928);
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 3);
+    }
     
     return true;
-}
+} 
