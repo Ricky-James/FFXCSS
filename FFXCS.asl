@@ -26,25 +26,25 @@ startup
 	settings.Add("check", true, "Code compiled!");
 	
     // Arrays are { {room_0, story_0}, {room_1, story_1} }
-	vars.arrayRS = new short[,]{	{ 93, 960, 93, 962 }, // Leave MRR -> Djose
-									{ 76, 962, 76, 990 }, // Djopse -> Trials
-									{ 214, 990, 214, 995 }, // Trials -> Chamber
-									{ 161, 1010, 161, 1032 }, // Wake Yuna -> Moonflow
-									{ 105, 1032, 105, 1045 }, // Moonflow/Shoopuff
-									{ 291, 1045, 99, 1060 }, // Pre-Extractor
-									{ 291, 1060, 236, 1070 }, // Post-Extractor
-									{ 189, 1070, 189, 1085 }, // Remove Rikku's appearance
-									{ 97, 1085, 97, 1104 }, // Post-Rikku to Seymour's Room
-									{ 141, 1104, 163, 1154 }, // Seymour's Room to Farplane
-									{ 193, 1154, 135, 1190 }, // Skip Farplane
-									{ 135, 1190, 135, 1310 }, // Skip Guadosalam Exit
-									{ 264, 1315, 263, 1418 } // Inn Sleep
+	vars.arrayRS = new short[,]{	{ 93, 960, 93, 962, 0 }, // Leave MRR -> Djose
+									{ 76, 962, 76, 990, 0 }, // Djopse -> Trials
+									{ 214, 990, 214, 995, 0 }, // Trials -> Chamber
+									{ 161, 1010, 161, 1032, 0 }, // Wake Yuna -> Moonflow
+									{ 105, 1032, 105, 1045, 0 }, // Moonflow/Shoopuff
+									{ 291, 1045, 99, 1060, 0 }, // Pre-Extractor
+									{ 291, 1060, 236, 1070, 0 }, // Post-Extractor
+									{ 189, 1070, 189, 1085, 0}, // Remove Rikku's appearance
+									{ 97, 1085, 97, 1104, 0 }, // Post-Rikku to Seymour's Room
+									{ 141, 1104, 163, 1154, 0 }, // Seymour's Room to Farplane
+									{ 193, 1154, 135, 1190, 0 }, // Skip Farplane
+									{ 135, 1190, 135, 1310, 0 }, // Skip Guadosalam Exit
+									{ 264, 1315, 263, 1418, 0 } // Inn Sleep
 									};
     // Not skipped:
     // Ixion fayth room, B&Y, Rikku/Lightning
 
     // Arrays are {HP, story_0, room_1, story_1, spawn_1}
-    vars.bossRS = new short[,]{       {12000, 1420, 221, 1470, 2}/*, // Spherimorph
+    vars.bossRS = new int[,]{       {12000, 1420, 221, 1470, 2}/*, // Spherimorph
                                     {70000, 2555, 285, 2585, 2}  // Flux */
                                     };
     vars.boss_fight = -1;
@@ -381,15 +381,62 @@ update
     //    game.WriteValue(modules.First().BaseAddress+0xD2D67C, 425);
     //    game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1);
     //}
+
+    //if (current.roomNumber == 121 && current.storyline == 486)
+    //{
+    //    print("Luca - Tournament begins");
+    //    game.WriteValue(modules.First().BaseAddress+0xD2CA90, 77);
+    //    game.WriteValue(modules.First().BaseAddress+0xD2D67C, 492);
+    //   game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1);
+    //}
+    
+    if (current.roomNumber == 121 && current.storyline == 508)
+    {
+        print("Luca - Aurochs win the game");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 88);
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 514);
+    }
+    
+    if (current.roomNumber == 95 && current.storyline == 730)
+    {
+        print("Mi'ihen - Tidus runs up the stairs");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 750);
+    }
+    
+    if (current.roomNumber == 58 && current.storyline == 750)
+    {
+        print("Mi'ihen - Reset it back to avoid a sequence break!");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 734);
+    }
+    
+    if (current.roomNumber == 112 && current.storyline == 755)
+    {
+        print("Mi'ihen - Tidus chats with Yuna");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 171);
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 760);
+    }
+    
+    if ((current.roomNumber == 79 && current.storyline == 787) || (current.roomNumber == 79 && current.storyline == 815 && current.spawnPoint == 2))
+    {
+        print("MRR - Tidus distrusts Seymour");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 825);
+    }
+    
+    if (current.roomNumber == 119 && current.storyline == 825)
+    {
+        print("MRR - Preparing for Sin");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 845);
+    }
+    
+    if ((current.roomNumber == 218 && current.storyline == 902) || (current.roomNumber == 247 && current.storyline == 899))
+    {
+        print("MRR - Chasing after Sin");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 131);
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 928);
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 3);
+    }
 	
 	// Roosta's additions, beginning post-Gui
-    // Cereth's Soft
-    if(game.ReadValue<sbyte>(modules.First().BaseAddress+0xF4080C) > 0)
-    {
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
-        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);
-    }
-
 	// Add Rikku to the party
 	byte temp;
 	if(current.roomNumber == 109 && old.roomNumber == 189)
@@ -414,12 +461,16 @@ update
 			sVal = vars.arrayRS[i, 3];
 			game.WriteValue(modules.First().BaseAddress+0xD2D67C, sVal);
 
+            sVal = vars.arrayRS[i, 4];
+			game.WriteValue(modules.First().BaseAddress+0xD2CA9C, sVal);
+
 			print("Skipping from arrayRS!");
 		}
 	}
 
     // Loop for going over boss array
     //{12000, 1420, 221, 1470, 2}
+    int iVal;
     for(int i = 0; i < vars.bossRS.GetLength(0); i++)
 	{
         // Set boss_fight to be true if you enter a boss fight
@@ -430,14 +481,14 @@ update
 
         if(vars.boss_fight != -1 && current.menu == 0 && old.menu == 1)
         {
-            sVal = vars.bossRS[i, 2];
-            game.WriteValue(modules.First().BaseAddress+0xD2CA90, sVal); // Set the zone
+            iVal = vars.bossRS[i, 2];
+            game.WriteValue(modules.First().BaseAddress+0xD2CA90, iVal); // Set the zone
             
-            sVal = vars.bossRS[i, 3];
-            game.WriteValue(modules.First().BaseAddress+0xD2D67C, sVal); // Set the story
+            iVal = vars.bossRS[i, 3];
+            game.WriteValue(modules.First().BaseAddress+0xD2D67C, iVal); // Set the story
             
-            sVal = vars.bossRS[i, 4];
-            game.WriteValue(modules.First().BaseAddress+0xD2CA9C, sVal); // Set the spawn
+            iVal = vars.bossRS[i, 4];
+            game.WriteValue(modules.First().BaseAddress+0xD2CA9C, iVal); // Set the spawn
             
             game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); // Force a fade
             
