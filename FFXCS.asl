@@ -14,6 +14,7 @@ state("FFX")
     byte fade: "FFX.exe", 0xF3080C;
     byte menu: "FFX.exe", 0xF407E4;
     int HP_Enemy_A: "FFX.exe", 0xD34460, 0x5D0;
+    int battleState: "FFX.exe", 0xD2C9F0;
 
     byte movementLock: "FFX.exe", 0xF25B63;
     byte musicID: "FFX.exe", 0xF2FF1C;
@@ -55,8 +56,14 @@ startup
 
 update
 {
+    // End any battle by holding start + select
+    if (current.input == 2304 && current.battleState == 10)
+    {
+        game.WriteValue(modules.First().BaseAddress+0xD2C9F0, 778);
+    }
 
-    if(current.input == 2063)
+    // Soft reset by holding L1 R1 L2 R2 + Start
+    if(current.input == 2063 && current.battleState != 10)
     {
         print("Soft reset");
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
@@ -386,12 +393,7 @@ update
     //}
 	
 	// Roosta's additions, beginning post-Gui
-    // Cereth's Soft
-    if(game.ReadValue<sbyte>(modules.First().BaseAddress+0xF4080C) > 0)
-    {
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
-        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);
-    }
+
 
 	// Add Rikku to the party
 	byte temp;
@@ -456,7 +458,7 @@ update
         //game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);   // Force a fade
     }
 
-// HIGHBRIDGE
+    // HIGHBRIDGE
 
     if (current.roomNumber == 208 && current.storyline == 2220)
     {
@@ -468,20 +470,19 @@ update
 
     if (current.roomNumber == 183 && current.storyline == 2290)
     {
-        // 0:35
         print("Natus Death");
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 183);
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2300);
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0);
     }
 
-    if (current.roomNumber == 206 && current.storyline == 2300)
+    if (current.roomNumber == 206 && current.storyline == 2300 && current.cutsceneAlt == 128)
     {
         print("Lake skip");
-        current.cutsceneFlag = 1;
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 177);
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2385);
-        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1);
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 177); // AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2385); // CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); // Force Load
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); // Spawn Point
     }
 
     // CALM LANDS
@@ -498,30 +499,26 @@ update
     if (current.roomNumber == 279 && current.storyline == 2420)
     {
         //Defender X death
-        
         //Check position is high enough (over the bridge) + Movement is locked
         if(current.xCoords > 250.0f && current.movementLock == 48)
         {
-            print("Yuna skip + Kelk");
-            
+            print("Yuna talks on bridge + Kelk");
             game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn
             game.WriteValue(modules.First().BaseAddress+0xD2CA90, 259); //Area
             game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force Load
             game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2510); //Story
- 
         }
     }
 
     // GAGAZET
     if(current.roomNumber == 259 && current.storyline == 2510 && current.cutsceneAlt == 70) //Other cutscene address
     {
-        print("Ronso death + Ronso singing");
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2530);
+        print("Ronso singing");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2530); //CutsceneID
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force Load
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
     }
 
-    
     //TODO: Add back in the flashback movement
 
     if (current.roomNumber == 285 && current.storyline == 2555)
@@ -546,7 +543,7 @@ update
     {
         print("Sanc Keeper Dead -> Pre-Yunalesca");
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2815);
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2815); //Cutscene ID
     }
 
     if (current.roomNumber == 270 && current.storyline == 2835)
@@ -585,12 +582,74 @@ update
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn
         game.WriteValue(modules.First().BaseAddress+0xD2D710, 2560); //Unlock "Sin" destination
+    }
+
+    if (current.roomNumber == 255 && current.storyline == 2990)
+    {
+        print("Airship -> Sin");
+        // TODO: Fix spawn such that you spawn in the corridor.
+        // Had issues implementing this due to a problem with the camera
+        // The corridor screen is actually 1 screen with 1 AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 211); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 3010); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    // SHHHHIN
+
+    if (current.roomNumber == 277 && current.storyline == 3010)
+    {
+        print("Left Fin");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 199); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 3085); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 200 && current.storyline == 3100)
+    {
+        print("Right fin death");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 201); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 3105); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 201 && current.storyline == 3120)
+    {
+        print("Core death");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 374); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 3125); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
+    }
+
+    //Check if far enough left on the deck, and for X input (fake "talk" to Yuna)
+    if (current.roomNumber == 202 && current.storyline == 3125 && current.xCoords < 5f && current.input == 32)
+    {
+        print("Pre-OD Sin Yuna monologue");
+        // TODO: Same as Airship -> Sin. This cutscene spawns you in the corridor.
+
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 374); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 3135); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
+    }
+
+    // INSIDE SIN
+
+    if (current.roomNumber == 204 && current.storyline == 3210)
+    {
+        print("Omnis dead");
+        // Ensures meteorite is already fallen
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 3250); //CutsceneID
+    }
+
+    if (current.roomNumber == 325 && current.storyline == 3300 && current.cutsceneAlt == 71)
+    {
+        print("BFA Death");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 326); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 3360); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
 
     }
 
-    
-
-
-    
     return true;
 }
