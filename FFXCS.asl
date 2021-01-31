@@ -18,6 +18,9 @@ state("FFX")
     byte movementLock: "FFX.exe", 0xF25B63;
     byte musicID: "FFX.exe", 0xF2FF1C;
     float cameraRot: "FFX.exe", 0x8A858C;
+    byte cutsceneAlt: "FFX.exe", 0xD27C88;
+
+    byte airshipDestinations: "FFX.exe", 0xD2D710;
 }
 
 startup
@@ -510,8 +513,7 @@ update
     }
 
     // GAGAZET
-    if(current.roomNumber == 259 && current.storyline == 2510
-    && game.ReadValue<byte>(modules.First().BaseAddress+0xD27C88) == 70)
+    if(current.roomNumber == 259 && current.storyline == 2510 && current.cutsceneAlt == 70) //Other cutscene address
     {
         print("Ronso death + Ronso singing");
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2530);
@@ -570,8 +572,21 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 7); //Spawn
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2915); //CutsceneID
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+        game.WriteValue(modules.First().BaseAddress+0xD2D710, 2048); //Unlock Highbridge
     }
+
+    //Cutscene 2910 -> 2915 not currently skipped as it unlocks Highbridge
     
+    if (current.roomNumber == 208 && current.storyline == 2920 && current.cutsceneAlt == 90)
+    {
+        print("Highbridge return -> Airship");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 255); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2970); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xD2D710, 2560); //Unlock "Sin" destination
+
+    }
 
     
 
