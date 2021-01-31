@@ -9,10 +9,25 @@ state("FFX")
     int xCoords: "FFX.exe", 0xF25D80;
     int yCoords: "FFX.exe", 0xF25D78;
     byte camera: "FFX.exe", 0xD3818C;
+    
+    int button: "FFX.exe", 0x8CB170;
 }
 
 update
 {
+   
+    if (current.roomNumber == 348 && current.storyline == 0)
+    {
+        print("Skip Intro");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
+    }
+    
+    if(current.button == 503318543) // L1 + L2 + R1 + R2 + Start
+    {
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);
+    }
+    
     //print(current.intro.ToString());
     //print(memory.ReadValue<byte>(modules.First().BaseAddress + 0xB8D7D9).ToString());
     // START OF ZANARKAND
@@ -56,7 +71,7 @@ update
         print("Sinspawn Ammes?");
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 15);
     }
-    if (current.roomNumber == 367)
+    if (current.roomNumber == 367 && current.storyline == 16)
     {
         print("Zanarkand - Tidus sees Jecht sign again");
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 18);
@@ -80,6 +95,7 @@ update
         // TO DO - Tidus spawns standing and not swimming
         print("Baaj Temple - Tidus wakes up");
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 42);
+        game.WriteValue(modules.First().BaseAddress+0xEA2280+0x184, 131584);
     }
     if (current.roomNumber == 49 && current.storyline == 44)
     {
@@ -167,16 +183,12 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 128);
     }
     // TO DO Tidus meets the Crusaders
-    if (current.roomNumber == 69 && current.storyline == 128 && current.camera == 0)
-    {
-        print("Besaid - Tidus meets the Crusaders");
-        //game.WriteValue(modules.First().BaseAddress+0xF00740, 283768848);
-        //game.WriteValue(modules.First().BaseAddress+0xF25B60, 550017163);
-        //game.WriteValue(modules.First().BaseAddress+0xF00740, 48);
-        //game.WriteValue(modules.First().BaseAddress+0xF25B63, 32);
-        //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 130);
-        //game.WriteValue(modules.First().BaseAddress+0xD3818C, 1);
-    }
+    //if (current.roomNumber == 69 && current.storyline == 128 && current.camera == 0)
+    //{
+    //    print("Besaid - Tidus meets the Crusaders");
+    //    game.WriteValue(modules.First().BaseAddress+0x153BF74, 6);
+    //    game.WriteValue(modules.First().BaseAddress+0xD3818C, 1);
+    //}
     //if (current.roomNumber == 133 && current.storyline == 130)
     //{
     //    print("Besaid - Tidus arrives at Besaid Village");
@@ -328,6 +340,60 @@ update
     //    game.WriteValue(modules.First().BaseAddress+0xD2D67C, 425);
     //    game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1);
     //}
+    
+    //if (current.roomNumber == 121 && current.storyline == 486)
+    //{
+    //    print("Luca - Tournament begins");
+    //    game.WriteValue(modules.First().BaseAddress+0xD2CA90, 77);
+    //    game.WriteValue(modules.First().BaseAddress+0xD2D67C, 492);
+    //   game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1);
+    //}
+    
+    if (current.roomNumber == 121 && current.storyline == 508)
+    {
+        print("Luca - Aurochs win the game");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 88);
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 514);
+    }
+    
+    if (current.roomNumber == 95 && current.storyline == 730)
+    {
+        print("Mi'ihen - Tidus runs up the stairs");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 750);
+    }
+    
+    if (current.roomNumber == 58 && current.storyline == 750)
+    {
+        print("Mi'ihen - Reset it back to avoid a sequence break!");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 734);
+    }
+    
+    if (current.roomNumber == 112 && current.storyline == 755)
+    {
+        print("Mi'ihen - Tidus chats with Yuna");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 171);
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 760);
+    }
+    
+    if ((current.roomNumber == 79 && current.storyline == 787) || (current.roomNumber == 79 && current.storyline == 815 && current.spawnPoint == 2))
+    {
+        print("MRR - Tidus distrusts Seymour");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 825);
+    }
+    
+    if (current.roomNumber == 119 && current.storyline == 825)
+    {
+        print("MRR - Preparing for Sin");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 845);
+    }
+    
+    if ((current.roomNumber == 218 && current.storyline == 902) || (current.roomNumber == 247 && current.storyline == 899))
+    {
+        print("MRR - Chasing after Sin");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 131);
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 928);
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 3);
+    }
     
     return true;
 } 
