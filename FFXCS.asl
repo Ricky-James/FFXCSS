@@ -12,6 +12,7 @@ state("FFX")
 
     byte fade: "FFX.exe", 0xF3080C;
     byte menu: "FFX.exe", 0xF407E4;
+    int HP_Enemy_A: "FFX.exe", 0xD34460, 0x5D0;
 }
 
 startup
@@ -19,22 +20,28 @@ startup
 	// Putting a tooltip so you can see if the file is loading
 	settings.Add("check", true, "Code compiled!");
 	
-	vars.arrayRS = new short[,,]{	{ { 93, 960 }, { 93, 962 } }, // Leave MRR -> Djose
-									{ { 76, 962 }, { 76, 990 } }, // Djopse -> Trials
-									{ { 214, 990 }, { 214, 995 } }, // Trials -> Chamber
-									{ { 161, 1010 }, { 161, 1032 } }, // Wake Yuna -> Moonflow
-									{ { 105, 1032 }, { 105, 1045 } }, // Moonflow/Shoopuff
-									{ { 291, 1045 }, { 99, 1060 } }, // Pre-Extractor
-									{ { 291, 1060 }, { 236, 1070 } }, // Post-Extractor
-									{ { 189, 1070 }, { 189, 1085 } }, // Remove Rikku's appearance
-									{ { 97, 1085 }, { 97, 1104 } }, // Post-Rikku to Seymour's Room
-									{ { 141, 1104 }, { 163, 1154 } }, // Seymour's Room to Farplane
-									{ { 193, 1154 }, { 135, 1190 } }, // Skip Farplane
-									{ { 135, 1190 }, { 135, 1310 } }, // Skip Guadosalam Exit
-									{ { 264, 1315 }, { 263, 1418 } } // Inn Sleep
+    // Arrays are { {room_0, story_0}, {room_1, story_1} }
+	vars.arrayRS = new short[,]{	{ 93, 960, 93, 962 }, // Leave MRR -> Djose
+									{ 76, 962, 76, 990 }, // Djopse -> Trials
+									{ 214, 990, 214, 995 }, // Trials -> Chamber
+									{ 161, 1010, 161, 1032 }, // Wake Yuna -> Moonflow
+									{ 105, 1032, 105, 1045 }, // Moonflow/Shoopuff
+									{ 291, 1045, 99, 1060 }, // Pre-Extractor
+									{ 291, 1060, 236, 1070 }, // Post-Extractor
+									{ 189, 1070, 189, 1085 }, // Remove Rikku's appearance
+									{ 97, 1085, 97, 1104 }, // Post-Rikku to Seymour's Room
+									{ 141, 1104, 163, 1154 }, // Seymour's Room to Farplane
+									{ 193, 1154, 135, 1190 }, // Skip Farplane
+									{ 135, 1190, 135, 1310 }, // Skip Guadosalam Exit
+									{ 264, 1315, 263, 1418 } // Inn Sleep
 									};
     // Not skipped:
     // Ixion fayth room, B&Y, Rikku/Lightning
+
+    // Arrays are {HP, story_0, room_1, story_1, spawn_1}
+    vars.bossRS = new short[,]{     {12000, 1420, 221, 1470, 2} // Spherimorph
+                                    };
+    vars.boss_fight = -1;
 }
 
 update
@@ -356,13 +363,11 @@ update
     //}
 	
 	// Roosta's additions, beginning post-Gui
-    //if (current.roomNumber == 164)
-    short zone = 221;
-    if(old.menu == 1 && current.menu == 0) // If you're leaving a menu
+    // Cereth's Soft
+    if(game.ReadValue<sbyte>(modules.First().BaseAddress+0xF4080C) > 0)
     {
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 248); // Set the zone
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1455); // Set the story
-        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);   // Force a fade
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);
     }
 
 	// Add Rikku to the party
@@ -379,17 +384,54 @@ update
 	
 	// Loop for going over skip array
 	short sVal;
-	for(int i = 0; i < vars.arrayRS.Length; i++)
+	for(int i = 0; i < vars.arrayRS.GetLength(0); i++)
 	{
-		if(current.roomNumber == vars.arrayRS[i,0,0] && current.storyline == vars.arrayRS[i,0,1])
+		if(current.roomNumber == vars.arrayRS[i, 0] && current.storyline == vars.arrayRS[i, 1])
 		{
-			sVal = vars.arrayRS[i,1,0];
+			sVal = vars.arrayRS[i, 2];
 			game.WriteValue(modules.First().BaseAddress+0xD2CA90, sVal);
-			sVal = vars.arrayRS[i,1,1];
+
+			sVal = vars.arrayRS[i, 3];
 			game.WriteValue(modules.First().BaseAddress+0xD2D67C, sVal);
+
 			print("Skipping from arrayRS!");
 		}
 	}
+
+    // Loop for going over boss array
+    //{12000, 1420, 221, 1470, 2}
+    for(int i = 0; i < vars.bossRS.GetLength(0); i++)
+	{
+        // Set boss_fight to be true if you enter a boss fight
+		if(current.HP_Enemy_A == vars.bossRS[i,0] && current.storyline == vars.bossRS[i,1])
+		{
+			vars.boss_fight = i;
+		}
+
+        if(vars.boss_fight != -1 && current.menu == 0 && old.menu == 1)
+        {
+            sVal = vars.bossRS[i, 2];
+            game.WriteValue(modules.First().BaseAddress+0xD2CA90, sVal); // Set the zone
+            
+            sVal = vars.bossRS[i, 3];
+            game.WriteValue(modules.First().BaseAddress+0xD2D67C, sVal); // Set the story
+            
+            sVal = vars.bossRS[i, 4];
+            game.WriteValue(modules.First().BaseAddress+0xD2CA9C, sVal); // Set the spawn
+            
+            game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); // Force a fade
+            
+            vars.boss_fight = -1;
+        }
+	}
+
+    //if (current.roomNumber == 164)
+    if(old.menu == 1 && current.menu == 0) // If you're leaving a menu
+    {
+        //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 248); // Set the zone
+        //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1455); // Set the story
+        //game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);   // Force a fade
+    }
     
     return true;
 }
