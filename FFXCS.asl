@@ -24,6 +24,7 @@ state("FFX")
     byte cutsceneAlt: "FFX.exe", 0xD27C88;
 
     byte airshipDestinations: "FFX.exe", 0xD2D710;
+    short auronOverdrives: "FFX.exe", 0xD307FC;
 }
 
 
@@ -112,7 +113,8 @@ startup
     // Ixion fayth room, B&Y, Rikku/Lightning
 
     // Arrays are {HP, story_0, room_1, story_1, spawn_1}
-    vars.bossRS = new int[,]{       {12000, 1420, 221, 1470, 2}/*, // Spherimorph
+    vars.bossRS = new int[,]{       {12000, 1420, 221, 1480, 2}, // Spherimorph
+                                    {16000, 1485, 192, 1530, 1}, // Crawler
                                     {70000, 2555, 285, 2585, 2}  // Flux */
                                     };
     vars.boss_fight = -1;
@@ -120,6 +122,11 @@ startup
 
 update
 {
+    //// For testing spawn points:
+    //game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); // Force Load
+    //game.WriteValue(modules.First().BaseAddress+0xD2CA9C, ); // Spawn Point
+
+
     // End any battle by holding start + select
     if (current.input == 2304 && current.battleState == 10)
     {
@@ -140,17 +147,24 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
     }
 
-    // TO DO Speak to kids
-    // TO DO Speak to women
+    // TO DO Speak to kids -- Leave this in so we can name Tidus?
+
+    if (current.roomNumber == 368 && current.storyline == 3 && current.menu == 1)
+    {
+        // Fangirls or kids skip. (whichever is 2nd)
+        game.WriteValue(modules.First().BaseAddress+0xD2CE7C, 3); 
+    }
+
     // TO DO Tidus leaves fans
     if (current.roomNumber == 368 && current.storyline == 3 && current.intro == 4096)
     {
         print("Zanarkand - Speak to kids");
         game.WriteValue(modules.First().BaseAddress+0x922D64, 188416);
     }
+    
     // TO DO Tidus speaks to Auron
-    // TO DO Post Sinscales battle?
-    // TO DO Pre Sinspawn Ammes battle?
+    // TO DO Post Sinscales battle
+    // TO DO Pre Tanker battle
     // TO DO Post Tanker battle?
     // TO DO Sin absorbs Tidus FMV
     // TO DO Tidus wakes up inside Sin
@@ -234,7 +248,7 @@ update
 			vars.boss_fight = i;
 		}
 
-        if(vars.boss_fight != -1 && current.menu == 0 && old.menu == 1)
+        if(vars.boss_fight == i && current.menu == 0 && old.menu == 1)
         {
             iVal = vars.bossRS[i, 2];
             game.WriteValue(modules.First().BaseAddress+0xD2CA90, iVal); // Set the zone
@@ -444,12 +458,22 @@ update
     {
         print("Sanc Keeper dead -> Zanarkand Trials");
         
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 361); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 311); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2680); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn
+    }
+
+    if (current.roomNumber == 132 && current.storyline == 2700)
+    {
+        print("Zanarkand campfire songs");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 363); //AreaID
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2767); //CutsceneID
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn
     }
     
+
     if (current.roomNumber == 318 && current.storyline == 2790)
     {
         print("Sanc Keeper Dead -> Pre-Yunalesca");
@@ -533,6 +557,7 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
     }
 
+    // TODO: Not working
     //Check if far enough left on the deck, and for X input (fake "talk" to Yuna)
     if (current.roomNumber == 202 && current.storyline == 3125 && current.xCoords < 5f && current.input == 32)
     {
@@ -560,6 +585,24 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 3360); //CutsceneID
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
 
+    }
+
+    // MACALANIA
+    // Note: Just adding to the bottom so the skips being added in a sort of chronological order
+    // To me this makes more sense
+
+    if (current.roomNumber == 221 && current.storyline == 1413)
+    {
+        print("Open room to Spherimorph by default");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 221); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1420); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.storyline == 1470 && current.auronOverdrives == 11553)
+    {
+        print("Post-Spherimorph SS unlock");
+        game.WriteValue(modules.First().BaseAddress+0xD307FC, 11569); //Unlock shooting star
     }
 
     return true;
