@@ -30,25 +30,7 @@ state("FFX")
 startup
 {
 
-    // End any battle by holding start + select
-    if (current.input == 2304 && current.battleState == 10)
-    {
-        game.WriteValue(modules.First().BaseAddress+0xD2C9F0, 778);
-    }
 
-    // Soft reset by holding L1 R1 L2 R2 + Start
-    if(current.input == 2063 && current.battleState != 10)
-    {
-        print("Soft reset");
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
-        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);
-    }
-
-    if (current.roomNumber == 348)
-    {
-        print("Skip Intro");
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
-    }
 
     //print(current.intro.ToString());
     //print(memory.ReadValue<byte>(modules.First().BaseAddress + 0xB8D7D9).ToString());
@@ -138,12 +120,26 @@ startup
 
 update
 {
-    if(current.input == 2063)
+    // End any battle by holding start + select
+    if (current.input == 2304 && current.battleState == 10)
+    {
+        game.WriteValue(modules.First().BaseAddress+0xD2C9F0, 778);
+    } 
+
+    // Soft reset by holding L1 R1 L2 R2 + Start
+    if(current.input == 2063 && current.battleState != 10)
     {
         print("Soft reset");
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);
     }
+
+    if (current.roomNumber == 348)
+    {
+        print("Skip Intro");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
+    }
+
     // TO DO Speak to kids
     // TO DO Speak to women
     // TO DO Tidus leaves fans
@@ -371,85 +367,6 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 7); //Spawn
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2915); //CutsceneID
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
-    }
-    
-
-    // END OF S.S. WINNO
-    // START OF LUCA
-    
-    //if (current.roomNumber == 267 && current.storyline == 402)
-    //{
-    //    // Don't know why spawnpoint is not setting, currently places you OoB and it's a softlock
-    //    print("Luca - Everyone undocks S.S. Winno");
-    //    game.WriteValue(modules.First().BaseAddress+0xD2CA90, 267);
-    //    game.WriteValue(modules.First().BaseAddress+0xD2D67C, 425);
-    //    game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1);
-    //}
-	
-	// Roosta's additions, beginning post-Gui
-
-
-	// Add Rikku to the party
-	byte temp;
-	if(current.roomNumber == 109 && old.roomNumber == 189)
-	{
-		temp = 6;
-		game.WriteValue(modules.First().BaseAddress+0xD2D67C+0x3170, temp);
-		temp = 0;
-		game.WriteValue(modules.First().BaseAddress+0xD2D67C-0xB1B, temp);
-		temp = 11;
-		game.WriteValue(modules.First().BaseAddress+0xD2D67C+0x3170+0x1C14, temp);
-	}
-	
-	// Loop for going over skip array
-	short sVal;
-	for(int i = 0; i < vars.arrayRS.GetLength(0); i++)
-	{
-		if(current.roomNumber == vars.arrayRS[i, 0] && current.storyline == vars.arrayRS[i, 1])
-		{
-			sVal = vars.arrayRS[i, 2];
-			game.WriteValue(modules.First().BaseAddress+0xD2CA90, sVal);
-
-			sVal = vars.arrayRS[i, 3];
-			game.WriteValue(modules.First().BaseAddress+0xD2D67C, sVal);
-
-			print("Skipping from arrayRS!");
-		}
-	}
-
-    // Loop for going over boss array
-    //{12000, 1420, 221, 1470, 2}
-    for(int i = 0; i < vars.bossRS.GetLength(0); i++)
-	{
-        // Set boss_fight to be true if you enter a boss fight
-		if(current.HP_Enemy_A == vars.bossRS[i,0] && current.storyline == vars.bossRS[i,1])
-		{
-			vars.boss_fight = i;
-		}
-
-        if(vars.boss_fight != -1 && current.menu == 0 && old.menu == 1)
-        {
-            sVal = vars.bossRS[i, 2];
-            game.WriteValue(modules.First().BaseAddress+0xD2CA90, sVal); // Set the zone
-            
-            sVal = vars.bossRS[i, 3];
-            game.WriteValue(modules.First().BaseAddress+0xD2D67C, sVal); // Set the story
-            
-            sVal = vars.bossRS[i, 4];
-            game.WriteValue(modules.First().BaseAddress+0xD2CA9C, sVal); // Set the spawn
-            
-            game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); // Force a fade
-            
-            vars.boss_fight = -1;
-        }
-	}
-
-    //if (current.roomNumber == 164)
-    if(old.menu == 1 && current.menu == 0) // If you're leaving a menu
-    {
-        //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 248); // Set the zone
-        //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1455); // Set the story
-        //game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);   // Force a fade
     }
 
     // HIGHBRIDGE
