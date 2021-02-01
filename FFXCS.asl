@@ -115,6 +115,7 @@ startup
     // Arrays are {HP, story_0, room_1, story_1, spawn_1}
     vars.bossRS = new int[,]{       {12000, 1420, 221, 1480, 2}, // Spherimorph
                                     {16000, 1485, 192, 1504, 1}, // Crawler
+                                    {1200, 1570, 54, 1600, 0},  // Wendigo (Guard)
                                     {70000, 2555, 285, 2585, 2}  // Flux */
                                     };
     vars.boss_fight = -1;
@@ -616,9 +617,9 @@ update
 
     if (current.roomNumber == 80 && current.storyline == 1545)
     {
-        print("Backflip skip");
+        print("Backflip skip + Tromell sphere smash skip");
         //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 239); //AreaID
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1550); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1557); //CutsceneID
         //game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
     } 
 
