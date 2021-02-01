@@ -652,7 +652,56 @@ update
     {
         print("Kilika - Sending");
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 152); //Area ID
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 302); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 304); //CutsceneID
+    }
+
+    if (current.roomNumber == 72 && current.storyline == 514)
+    {
+        print("Luca - Wakka is injured");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 518); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1797); //Spawn
+    }
+
+    if (current.roomNumber == 72 && current.storyline == 520)
+    {
+        print("Luca - Lulu speaks to Wakka");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 124); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 535); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 72 && current.storyline == 540)
+    {
+        print("Luca - Halftime talk");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 347); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 560); //CutsceneID
+    }
+
+    if (current.roomNumber == 250 && current.storyline == 565)
+    {
+        print("Luca - Wakka chants");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 124); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 575); //CutsceneID
+    }
+
+    if (current.roomNumber == 250 && current.storyline == 582)
+    {
+        print("Luca - Aurochs win/lose the game");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 125); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 583); //CutsceneID
+    }
+
+    if (current.roomNumber == 57 && current.storyline == 588)
+    {
+        print("Luca - Lulu what's happening");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 600); //CutsceneID
+    }
+
+    if (current.roomNumber == 104 && current.storyline == 610)
+    {
+        print("Luca - Wakka quits the Aurochs");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 89); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 616); //CutsceneID
     }
 
     return true;
