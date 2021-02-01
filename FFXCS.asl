@@ -24,31 +24,14 @@ state("FFX")
     byte cutsceneAlt: "FFX.exe", 0xD27C88;
 
     byte airshipDestinations: "FFX.exe", 0xD2D710;
+    short auronOverdrives: "FFX.exe", 0xD307FC;
 }
 
 
 startup
 {
 
-    // End any battle by holding start + select
-    if (current.input == 2304 && current.battleState == 10)
-    {
-        game.WriteValue(modules.First().BaseAddress+0xD2C9F0, 778);
-    }
 
-    // Soft reset by holding L1 R1 L2 R2 + Start
-    if(current.input == 2063 && current.battleState != 10)
-    {
-        print("Soft reset");
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
-        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);
-    }
-
-    if (current.roomNumber == 348)
-    {
-        print("Skip Intro");
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
-    }
 
     //print(current.intro.ToString());
     //print(memory.ReadValue<byte>(modules.First().BaseAddress + 0xB8D7D9).ToString());
@@ -130,7 +113,8 @@ startup
     // Ixion fayth room, B&Y, Rikku/Lightning
 
     // Arrays are {HP, story_0, room_1, story_1, spawn_1}
-    vars.bossRS = new int[,]{       {12000, 1420, 221, 1470, 2}/*, // Spherimorph
+    vars.bossRS = new int[,]{       {12000, 1420, 221, 1480, 2}, // Spherimorph
+                                    {16000, 1485, 192, 1504, 1}, // Crawler
                                     {70000, 2555, 285, 2585, 2}  // Flux */
                                     };
     vars.boss_fight = -1;
@@ -138,23 +122,51 @@ startup
 
 update
 {
-    if(current.input == 2063)
+    //// For testing spawn points:
+    //game.WriteValue(modules.First().BaseAddress+0xF3080C, 0); // Force Load
+    //game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); // Spawn Point
+    //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 80); // Area
+    //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1530);
+    
+
+    // End any battle by holding start + select
+    if (current.input == 2304 && current.battleState == 10)
+    {
+        game.WriteValue(modules.First().BaseAddress+0xD2C9F0, 778);
+    } 
+
+    // Soft reset by holding L1 R1 L2 R2 + Start
+    if(current.input == 2063 && current.battleState != 10)
     {
         print("Soft reset");
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);
     }
-    // TO DO Speak to kids
-    // TO DO Speak to women
+
+    if (current.roomNumber == 348)
+    {
+        print("Skip Intro");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 23);
+    }
+
+    // TO DO Speak to kids -- Leave this in so we can name Tidus?
+
+    if (current.roomNumber == 368 && current.storyline == 3 && current.menu == 1)
+    {
+        // Fangirls or kids skip. (whichever is 2nd)
+        game.WriteValue(modules.First().BaseAddress+0xD2CE7C, 3); 
+    }
+
     // TO DO Tidus leaves fans
     if (current.roomNumber == 368 && current.storyline == 3 && current.intro == 4096)
     {
         print("Zanarkand - Speak to kids");
         game.WriteValue(modules.First().BaseAddress+0x922D64, 188416);
     }
+    
     // TO DO Tidus speaks to Auron
-    // TO DO Post Sinscales battle?
-    // TO DO Pre Sinspawn Ammes battle?
+    // TO DO Post Sinscales battle
+    // TO DO Pre Tanker battle
     // TO DO Post Tanker battle?
     // TO DO Sin absorbs Tidus FMV
     // TO DO Tidus wakes up inside Sin
@@ -238,7 +250,7 @@ update
 			vars.boss_fight = i;
 		}
 
-        if(vars.boss_fight != -1 && current.menu == 0 && old.menu == 1)
+        if(vars.boss_fight == i && current.menu == 0 && old.menu == 1)
         {
             iVal = vars.bossRS[i, 2];
             game.WriteValue(modules.First().BaseAddress+0xD2CA90, iVal); // Set the zone
@@ -372,85 +384,6 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2915); //CutsceneID
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
     }
-    
-
-    // END OF S.S. WINNO
-    // START OF LUCA
-    
-    //if (current.roomNumber == 267 && current.storyline == 402)
-    //{
-    //    // Don't know why spawnpoint is not setting, currently places you OoB and it's a softlock
-    //    print("Luca - Everyone undocks S.S. Winno");
-    //    game.WriteValue(modules.First().BaseAddress+0xD2CA90, 267);
-    //    game.WriteValue(modules.First().BaseAddress+0xD2D67C, 425);
-    //    game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1);
-    //}
-	
-	// Roosta's additions, beginning post-Gui
-
-
-	// Add Rikku to the party
-	byte temp;
-	if(current.roomNumber == 109 && old.roomNumber == 189)
-	{
-		temp = 6;
-		game.WriteValue(modules.First().BaseAddress+0xD2D67C+0x3170, temp);
-		temp = 0;
-		game.WriteValue(modules.First().BaseAddress+0xD2D67C-0xB1B, temp);
-		temp = 11;
-		game.WriteValue(modules.First().BaseAddress+0xD2D67C+0x3170+0x1C14, temp);
-	}
-	
-	// Loop for going over skip array
-	short sVal;
-	for(int i = 0; i < vars.arrayRS.GetLength(0); i++)
-	{
-		if(current.roomNumber == vars.arrayRS[i, 0] && current.storyline == vars.arrayRS[i, 1])
-		{
-			sVal = vars.arrayRS[i, 2];
-			game.WriteValue(modules.First().BaseAddress+0xD2CA90, sVal);
-
-			sVal = vars.arrayRS[i, 3];
-			game.WriteValue(modules.First().BaseAddress+0xD2D67C, sVal);
-
-			print("Skipping from arrayRS!");
-		}
-	}
-
-    // Loop for going over boss array
-    //{12000, 1420, 221, 1470, 2}
-    for(int i = 0; i < vars.bossRS.GetLength(0); i++)
-	{
-        // Set boss_fight to be true if you enter a boss fight
-		if(current.HP_Enemy_A == vars.bossRS[i,0] && current.storyline == vars.bossRS[i,1])
-		{
-			vars.boss_fight = i;
-		}
-
-        if(vars.boss_fight != -1 && current.menu == 0 && old.menu == 1)
-        {
-            sVal = vars.bossRS[i, 2];
-            game.WriteValue(modules.First().BaseAddress+0xD2CA90, sVal); // Set the zone
-            
-            sVal = vars.bossRS[i, 3];
-            game.WriteValue(modules.First().BaseAddress+0xD2D67C, sVal); // Set the story
-            
-            sVal = vars.bossRS[i, 4];
-            game.WriteValue(modules.First().BaseAddress+0xD2CA9C, sVal); // Set the spawn
-            
-            game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); // Force a fade
-            
-            vars.boss_fight = -1;
-        }
-	}
-
-    //if (current.roomNumber == 164)
-    if(old.menu == 1 && current.menu == 0) // If you're leaving a menu
-    {
-        //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 248); // Set the zone
-        //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1455); // Set the story
-        //game.WriteValue(modules.First().BaseAddress+0xF3080C, 1);   // Force a fade
-    }
 
     // HIGHBRIDGE
 
@@ -527,12 +460,22 @@ update
     {
         print("Sanc Keeper dead -> Zanarkand Trials");
         
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 361); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 311); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2680); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn
+    }
+
+    if (current.roomNumber == 132 && current.storyline == 2700)
+    {
+        print("Zanarkand campfire songs");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 363); //AreaID
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2767); //CutsceneID
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn
     }
     
+
     if (current.roomNumber == 318 && current.storyline == 2790)
     {
         print("Sanc Keeper Dead -> Pre-Yunalesca");
@@ -616,6 +559,7 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
     }
 
+    // TODO: Not working
     //Check if far enough left on the deck, and for X input (fake "talk" to Yuna)
     if (current.roomNumber == 202 && current.storyline == 3125 && current.xCoords < 5f && current.input == 32)
     {
@@ -644,6 +588,39 @@ update
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
 
     }
+
+    // MACALANIA
+    // Note: Just adding to the bottom so the skips being added in a sort of chronological order
+    // To me this makes more sense
+
+    if (current.roomNumber == 221 && current.storyline == 1413)
+    {
+        print("Open room to Spherimorph by default");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 221); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1420); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.storyline == 1470 && current.auronOverdrives == 11553)
+    {
+        print("Post-Spherimorph SS unlock");
+        game.WriteValue(modules.First().BaseAddress+0xD307FC, 11569); //Unlock shooting star
+    }
+
+    if (current.roomNumber == 106 && current.storyline == 1504)
+    {
+        print("Jysscal skip");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1530); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 80 && current.storyline == 1545)
+    {
+        print("Backflip skip");
+        //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 239); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1550); //CutsceneID
+        //game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    } 
 
     return true;
 }
