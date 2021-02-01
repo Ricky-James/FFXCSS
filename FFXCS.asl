@@ -71,14 +71,16 @@ startup
                                     // END OF BESAID
                                     // START OF SS LIKI
                                     { 301, 220, 301, 228, 256 },    // Tidus goofing around
+                                    // END OF SS LIKI
+                                    // START OF KILIKA
                                     { 43, 292, 43, 294, 0 },        // Undocking in Kilika
                                     { 152, 300, 152, 302, 0 },      // Tidus wakes up
-                                    { 18, 308, 18, 311, 0 },        // Camera pan in Kilika Woods
+                                    { 18, 308, 18, 312, 0 },        // Camera pan in Kilika Woods
                                     { 65, 315, 65, 322, 0 },        // Race up the stairs
                                     { 78, 328, 78, 330, 1 },        // Arrival at temple
                                     { 96, 330, 96, 333, 0 },        // Camera pan in Kilika Temple
-                                    // END OF BESAID
-                                    // START OF SS LIKI
+                                    // END OF KILIKA
+                                    // START OF SS WINNO
                                     { 94, 370, 167, 372, 0 },       // Opening scenes
                                     // END OF WINNO
                                     // START OF LUCA
@@ -622,6 +624,36 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1557); //CutsceneID
         //game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
     } 
+
+    if (current.roomNumber == 49 && current.storyline == 48)
+    {
+        print("Baaj Temple - Escape from Geogaesno");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 50); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 50); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 63 && current.storyline == 54)
+    {
+        print("Baaj Temple - Tidus makes fire");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 55); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 63 && current.storyline == 58)
+    {
+        print("Baaj Temple - Rikku punches Tidus");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 71); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 66); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 53 && current.storyline == 294)
+    {
+        print("Kilika - Sending");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 152); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 302); //CutsceneID
+    }
 
     return true;
 }
