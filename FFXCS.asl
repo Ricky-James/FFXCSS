@@ -16,7 +16,7 @@ state("FFX")
     int HP_Enemy_A: "FFX.exe", 0xD34460, 0x5D0;
 
     int battleState: "FFX.exe", 0xD2C9F0;
-
+    sbyte gameState: "FFX.exe", 0xD381AC; // -1 Loading screen, 0 = open world, 1 = cutscene, 2 = battle
 
     byte movementLock: "FFX.exe", 0xF25B63;
     byte musicID: "FFX.exe", 0xF2FF1C;
@@ -648,13 +648,6 @@ update
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
     }
 
-    if (current.roomNumber == 53 && current.storyline == 294)
-    {
-        print("Kilika - Sending");
-        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 152); //Area ID
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 304); //CutsceneID
-    }
-
     if (current.roomNumber == 72 && current.storyline == 514)
     {
         print("Luca - Wakka is injured");
@@ -701,7 +694,24 @@ update
     {
         print("Luca - Wakka quits the Aurochs");
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 89); //Area ID
-        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 616); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 617); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD381AC, 17); //Enable Auron
+    }
+
+    if (current.roomNumber == 53 && current.storyline == 294 && old.gameState == 1 && current.gameState == 0)
+    { // Weird, the gameState has flipped for this cutscene, so need to check if it's changed from 1 to 0
+        print("Kilika - Sending");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 152); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 304); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 16 && current.storyline == 304 && current.gameState == 1)
+    {
+        print("Kilika - Tidus speaks to Wakka");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 308); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 2); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
     }
 
     return true;
