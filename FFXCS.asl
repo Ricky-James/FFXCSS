@@ -25,16 +25,13 @@ state("FFX")
 
     byte airshipDestinations: "FFX.exe", 0xD2D710;
     short auronOverdrives: "FFX.exe", 0xD307FC;
+    byte7 partyMembers: "FFX.exe", 0xD307E8;
 }
 
 
 startup
 {
 
-
-
-    //print(current.intro.ToString());
-    //print(memory.ReadValue<byte>(modules.First().BaseAddress + 0xB8D7D9).ToString());
     // START OF ZANARKAND
 
 	// Putting a tooltip so you can see if the file is loading
@@ -115,7 +112,8 @@ startup
     // Arrays are {HP, story_0, room_1, story_1, spawn_1}
     vars.bossRS = new int[,]{       {12000, 1420, 221, 1480, 2}, // Spherimorph
                                     {16000, 1485, 192, 1504, 1}, // Crawler
-                                    {1200, 1570, 54, 1600, 0},  // Wendigo (Guard)
+                                   // {1200, 1570, 54, 1600, 0},   // Wendigo (Guard)
+                                   // {12000, 1704, 129, 1715, 0}, // Bikanel Zu
                                     {70000, 2555, 285, 2585, 2}  // Flux */
                                     };
     vars.boss_fight = -1;
@@ -126,8 +124,8 @@ update
     //// For testing spawn points:
     //game.WriteValue(modules.First().BaseAddress+0xF3080C, 0); // Force Load
     //game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); // Spawn Point
-    //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 80); // Area
-    //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1530);
+    //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 191); // Area
+    //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1612);
     
 
     // End any battle by holding start + select
@@ -285,7 +283,7 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2300);
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0);
     }
-
+    
     if (current.roomNumber == 206 && current.storyline == 2300)
     {
         print("Lake skip");
@@ -324,8 +322,7 @@ update
     }
 
     // GAGAZET
-    if(current.roomNumber == 259 && current.storyline == 2510
-    && game.ReadValue<byte>(modules.First().BaseAddress+0xD27C88) == 70)
+    if(current.roomNumber == 259 && current.storyline == 2510 && current.cutsceneAlt == 70)
     {
         print("Ronso death + Ronso singing");
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2530);
@@ -618,10 +615,42 @@ update
     if (current.roomNumber == 80 && current.storyline == 1545)
     {
         print("Backflip skip + Tromell sphere smash skip");
-        //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 239); //AreaID
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1557); //CutsceneID
-        //game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
     } 
+
+    if (current.roomNumber == 54 && current.storyline == 1600)
+    {
+        print("Wendigo death");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 54); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1610); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 191 && current.storyline == 1612)
+    {
+        print("Auron to Bikanel - Oasis");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 129); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1704); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+
+        // Modifying party member array. WIP, not working yet.
+        game.WriteValue(modules.First().BaseAddress+0xD307E8+0x1, 255);
+        game.WriteValue(modules.First().BaseAddress+0xD307E8+0x2, 255);
+        game.WriteValue(modules.First().BaseAddress+0xD307E8+0x3, 255);
+        game.WriteValue(modules.First().BaseAddress+0xD307E8+0x4, 255);
+        game.WriteValue(modules.First().BaseAddress+0xD307E8+0x5, 255);
+        game.WriteValue(modules.First().BaseAddress+0xD307E8+0x6, 255);
+    }
+
+       // game.WriteValue(modules.First().BaseAddress+0xD307E8, 0);
+       // game.WriteValue(modules.First().BaseAddress+0xD307E8+0x1, 255);
+       // game.WriteValue(modules.First().BaseAddress+0xD307E8+0x2, 255);
+       // game.WriteValue(modules.First().BaseAddress+0xD307E8+0x3, 255);
+       // game.WriteValue(modules.First().BaseAddress+0xD307E8+0x4, 255);
+       // game.WriteValue(modules.First().BaseAddress+0xD307E8+0x5, 255);
+       // game.WriteValue(modules.First().BaseAddress+0xD307E8+0x6, 255);
+//
 
     return true;
 }
