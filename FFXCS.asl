@@ -78,7 +78,7 @@ startup
                                     { 18, 308, 18, 312, 0 },        // Camera pan in Kilika Woods
                                     { 65, 315, 65, 322, 0 },        // Race up the stairs
                                     { 78, 328, 78, 330, 1 },        // Arrival at temple
-                                    { 96, 330, 96, 333, 0 },        // Camera pan in Kilika Temple
+                                    { 96, 330, 96, 335, 0 },        // Camera pan in Kilika Temple
                                     // END OF KILIKA
                                     // START OF SS WINNO
                                     { 94, 370, 167, 372, 0 },       // Opening scenes
@@ -695,7 +695,9 @@ update
         print("Luca - Wakka quits the Aurochs");
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 89); //Area ID
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 617); //CutsceneID
-        game.WriteValue(modules.First().BaseAddress+0xD381AC, 17); //Enable Auron
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xD321B0, (byte)17); //Enable Auron
+        // Bit far from the centre of the dock, have to run far for the chests
     }
 
     if (current.roomNumber == 53 && current.storyline == 294 && old.gameState == 1 && current.gameState == 0)
@@ -711,6 +713,110 @@ update
         print("Kilika - Tidus speaks to Wakka");
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 308); //CutsceneID
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 2); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 65 && current.storyline == 326 && old.gameState == 0 && current.gameState == 1)
+    {
+        print("Kilika - No replacement for Chappu");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 78); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 328); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 78 && current.storyline == 348 && old.gameState == 0 && current.gameState == 1)
+    {
+        print("Kilika - Tidus misses home");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 18); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 360); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 45 && current.storyline == 340)
+    {
+        print("Kilika - The guardians are annoyed at Tidus");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 346); //CutsceneID
+    }
+
+    if (current.roomNumber == 16 && current.storyline == 360 && old.gameState == 0 && current.gameState == 1)
+    {
+        print("Kilika - They set off to Luca");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 94); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 370); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 256); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 94 && current.storyline == 380 && old.gameState == 1 && current.gameState == 0)
+    {
+        print("S.S. Winno - Eavesdropping on Lulu and Wakka");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 380); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 2); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 94 && current.storyline == 395 && old.gameState == 1 && current.gameState == 0)
+    {
+        print("S.S. Winno - Tidus speaks to Yuna");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 267); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 425); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 2); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 268 && current.storyline == 427 && old.gameState == 0 && current.gameState == 1)
+    {
+        print("Luca - Seymour arrives");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 355); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 430); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 72 && current.storyline == 430 && old.gameState == 1 && current.gameState == 0)
+    {
+        print("Luca - Yuna enters the changing room");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 440); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1797); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 72 && current.storyline == 440 && old.gameState == 1 && current.gameState == 0)
+    {
+        print("Luca - Speaking to the Al Bhed");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 123); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 450); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 4); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 77 && current.storyline == 450)
+    {
+        print("Luca - Crowd mob Yuna");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 455); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
+    }
+
+    if (current.roomNumber == 159 && current.storyline == 455)
+    {
+        print("Luca - Tidus and Yuna go to the cafe");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 77); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 492); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
+
+        game.WriteValue(modules.First().BaseAddress+0xD3211C, 16); //Disable Yuna
+        game.WriteValue(modules.First().BaseAddress+0xD322D8, 16); //Disable Wakka      
+
+        game.WriteBytes(modules.First().BaseAddress+0xD307E8, new byte[]{0x5, 0x0, 0x3, 0xFF, 0xFF}); // Formation for worker fights
+    }
+
+    if (current.roomNumber == 107 && current.storyline == 630 && current.gameState == 0)
+    {
+        print("Luca - HA HA HA HA");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 95); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 730); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 256); //Spawn
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
     }
 
