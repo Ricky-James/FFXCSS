@@ -59,7 +59,6 @@ startup
                                     { 165, 55, 63, 55, 0 },         // Tidus has a dream about Auron
                                     { 71, 60, 71, 66, 0 },          // Tidus wakes up
                                     { 64, 70, 64, 74, 0 },          // They enter the submerged ruins
-                                    { 71, 90, 71, 100, 0 },         // Tidus gets back onto boat
                                     // END OF BAAJ TEMPLE
                                     // START OF BESAID
                                     { 67, 124, 69, 130, 0 },        // Wakka explains his life story
@@ -162,11 +161,17 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2CE7C, 3); 
     }
 
-    // TO DO Tidus leaves fans
     if (current.roomNumber == 368 && current.storyline == 3 && current.intro == 4096)
     {
         print("Zanarkand - Speak to kids");
         game.WriteValue(modules.First().BaseAddress+0x922D64, 188416);
+    }
+     if (current.roomNumber == 368 && current.storyline == 4)
+    {
+        print("Zanarkand - Tidus leaves fans");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 376); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 5); //Cutscene ID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
     }
     
     // TO DO Tidus speaks to Auron
@@ -833,12 +838,162 @@ update
         game.WriteBytes(modules.First().BaseAddress+0xD307E8, new byte[]{0x5, 0x0, 0x3, 0xFF, 0xFF}); // Formation for worker fights
     }
 
+    if (current.roomNumber == 121 && current.storyline == 492)
+    {
+        print("Luca - Wakka takes a beating");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 88); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 500); //CutsceneID
+    }  
+
+    if (current.roomNumber == 299 && current.storyline == 502)
+    {
+        print("Luca - They jump on the boat");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 113); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 502); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }  
+
+    if (current.roomNumber == 19 && current.storyline == 218 && old.gameState == 1 && current.gameState == 0)
+    {
+        print("Besaid - S.S. Liki departs");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 301); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 220); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load     
+    }
+
+    if (current.roomNumber == 61 && current.storyline == 244)
+    {
+        print("S.S. Liki - Tidus talks to Yuna");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 248); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load     
+    }
+
+    if (current.roomNumber == 282 && current.storyline == 285)
+    {
+        print("S.S. Liki - Kilika destroyed");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 43); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 292); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load     
+    }
+
+    if(current.roomNumber == 71 & current.storyline == 100 && old.gameState == 0 && current.gameState == 1)
+    {
+        print("Baaj Temple - Rikku suggests going to Luca");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 70); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 110); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load   
+    }
+
+    if(current.roomNumber == 41 & current.storyline == 119 && current.cutsceneAlt == 73)
+    {
+        print("Besaid - Wakka asks Tidus to join his team");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 67); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 124); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load   
+    }
+
+    if(current.roomNumber == 133 & current.storyline == 130)
+    {
+        print("Besaid - Tidus arrives at Besaid Village");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 17); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 134); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 3); //Spawn   
+    }
+
+    if(current.roomNumber == 84 & current.storyline == 136 && old.gameState == 0 && current.gameState == 1)
+    {
+        print("Besaid - Tidus speaks to the priest");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 140); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load  
+    }
+
+    if(current.roomNumber == 42 & current.storyline == 154 && old.gameState == 0 && current.gameState == 1)
+    {
+        print("Besaid - Tidus goes back to the temple");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 122); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 162); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load  
+    }
+
+    if(current.roomNumber == 103 & current.storyline == 164)
+    {
+        print("Besaid - Tidus meets Lulu and Kimahri + FMV");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 42); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 170); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load  
+    }
+
+    if(current.roomNumber == 380 & current.storyline == 84 && old.gameState == 1 && current.gameState == 0)
+    {
+        print("Baaj Temple - Airship is shown");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 71); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 90); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn 
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load  
+    }
+
+    if(current.roomNumber == 71 & current.storyline == 90 && old.gameState == 0 && current.gameState == 1)
+    {
+        print("Baaj Temple - Tidus gets back onto the boat");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 71); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 100); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn 
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load  
+    }
+
+    if(current.roomNumber == 70 & current.storyline == 111)
+    {
+        print("Besaid - Tidus wakes up in sea");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 118); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn 
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load  
+    }
+
+    if(current.roomNumber == 367 & current.storyline == 19)
+    {
+        print("Zanarkand - Post-Tanker");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 384); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 20); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load  
+    }
+
+    if(current.roomNumber == 384 & current.storyline == 20 && old.gameState == 1 && current.gameState == 0)
+    {
+        print("Zanarkand - Tidus thoughts after seeing Jecht");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 385); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load  
+    }
+
     if (current.roomNumber == 107 && current.storyline == 630 && current.gameState == 0)
     {
         print("Luca - HA HA HA HA");
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 95); //Area ID
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 730); //CutsceneID
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 256); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 58 && current.storyline == 734 && old.gameState == 1 && current.gameState == 0)
+    {
+        print("Mi'ihen - Auron is Tired");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 171); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 755); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 119 && current.storyline == 860)
+    {
+        print("MRR - Auron Look out + FMV");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 247); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 865); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 247 && current.storyline == 882)
+    {
+        print("MRR - Trying to beat Sin FMV");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 254); //Area ID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 922); //CutsceneID
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
     }
     
