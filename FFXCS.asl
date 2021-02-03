@@ -102,10 +102,10 @@ startup
 									{ 291, 1045, 99, 1060, 0 },     // Pre-Extractor
 									{ 291, 1060, 236, 1070, 0 },    // Post-Extractor
 									{ 189, 1070, 189, 1085, 0},     // Remove Rikku's appearance
-									{ 97, 1085, 97, 1104, 0 },      // Post-Rikku to Seymour's Room
-									{ 141, 1104, 163, 1154, 0 },    // Seymour's Room to Farplane
-									{ 193, 1154, 135, 1190, 0 },    // Skip Farplane
-									{ 135, 1190, 135, 1310, 0 },    // Skip Guadosalam Exit
+									//{ 141, 1104, 163, 1126, 1 },    // Seymour's Room to Farplane
+									//{ 163, 1126, 163, 1190, 0 },    // Skip Farplane
+                                    { 213, 1156, 213, 1300, 0 },     // Farplane Cutscenes
+                                    { 257, 1300, 135, 1300, 2 },    // Skip Guadosalam Exit
 									{ 264, 1315, 263, 1418, 0 }     // Inn Sleep
 									};
     // Not skipped:
@@ -267,6 +267,32 @@ update
             vars.boss_fight = -1;
         }
 	}
+
+    // Guadosalam
+    if(current.roomNumber == 141 & current.guado_count == 1)
+    {
+        //int buffer = memory.ReadValue<int>(modules.First().BaseAddress + 0x00F2FF14);
+        //game.WriteValue((IntPtr)(buffer + 0x120), 4);
+        //print("hello!");
+        var deepPtr = new DeepPointer("FFX.exe", 0x00F2FF14, 0x120);
+        uint addr;
+        if (!deepPtr.Deref<uint>(game, out addr)){
+            throw new Exception("Couldn't read the pointer path.");}
+        game.WriteValue((IntPtr)addr, 4);
+    }
+    if(current.guado_count == 5 && old.guado_count == 4)
+    {
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 163); // Set the zone
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1156); // Set the story
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); // Set the spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); // Force a fade
+    }
+    if(current.storyline == 1310 && old.storyline == 1300)
+    {
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 256); // Set the zone
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1310); // Set the story
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); // Force a fade
+    }
 
     // HIGHBRIDGE
     if (current.roomNumber == 208 && current.storyline == 2220)
