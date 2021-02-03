@@ -112,8 +112,8 @@ startup
     // Arrays are {HP, story_0, room_1, story_1, spawn_1}
     vars.bossRS = new int[,]{       {12000, 1420, 221, 1480, 2}, // Spherimorph
                                     {16000, 1485, 192, 1504, 1}, // Crawler
-                                   // {1200, 1570, 54, 1600, 0},   // Wendigo (Guard)
-                                   // {12000, 1704, 129, 1715, 0}, // Bikanel Zu
+                                    {1200, 1570, 54, 1600, 0},   // Wendigo (Guard)
+                                    {12000, 1704, 129, 1715, 0}, // Bikanel Zu
                                     {70000, 2555, 285, 2585, 2}  // Flux */
                                     };
     vars.boss_fight = -1;
@@ -123,7 +123,7 @@ update
 {
     //// For testing spawn points:
     //game.WriteValue(modules.First().BaseAddress+0xF3080C, 0); // Force Load
-    //game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); // Spawn Point
+    //game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 7); // Spawn Point
     //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 191); // Area
     //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1612);
     
@@ -620,11 +620,15 @@ update
 
     if (current.roomNumber == 54 && current.storyline == 1600)
     {
+
         print("Wendigo death");
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 54); //AreaID
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1610); //CutsceneID
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+        game.WriteValue(modules.First().BaseAddress+0x14E54E1, 1);
     }
+
+    // BIKANEL / SANUBIA
 
     if (current.roomNumber == 191 && current.storyline == 1612)
     {
@@ -634,23 +638,43 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
 
-        // Modifying party member array. WIP, not working yet.
-        game.WriteValue(modules.First().BaseAddress+0xD307E8+0x1, 255);
-        game.WriteValue(modules.First().BaseAddress+0xD307E8+0x2, 255);
-        game.WriteValue(modules.First().BaseAddress+0xD307E8+0x3, 255);
-        game.WriteValue(modules.First().BaseAddress+0xD307E8+0x4, 255);
-        game.WriteValue(modules.First().BaseAddress+0xD307E8+0x5, 255);
-        game.WriteValue(modules.First().BaseAddress+0xD307E8+0x6, 255);
+        // Fixing party formation to solo Tidus
+        game.WriteBytes(modules.First().BaseAddress+0xD307E8, new byte[]{0x0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF});
+
+        // Removing party members from menu:
+        // There's almost certainly a better way to do this since they're 148 bytes apart
+        // But I'm too lazy to figure out how when this is just as good.
+        // Maybe later.
+        game.WriteValue(modules.First().BaseAddress+0xD32088, (byte)11); // Tidus
+        game.WriteValue(modules.First().BaseAddress+0xD3211C, (byte)0);  // Yuna
+        game.WriteValue(modules.First().BaseAddress+0xD321B0, (byte)0);  // Auron
+        game.WriteValue(modules.First().BaseAddress+0xD32244, (byte)0);  // Kimmy
+        game.WriteValue(modules.First().BaseAddress+0xD322D8, (byte)0);  // Wakka
+        game.WriteValue(modules.First().BaseAddress+0xD3236C, (byte)0);  // Lulu
+        game.WriteValue(modules.First().BaseAddress+0xD32400, (byte)0);  // Rikku 
+        
+
     }
 
-       // game.WriteValue(modules.First().BaseAddress+0xD307E8, 0);
-       // game.WriteValue(modules.First().BaseAddress+0xD307E8+0x1, 255);
-       // game.WriteValue(modules.First().BaseAddress+0xD307E8+0x2, 255);
-       // game.WriteValue(modules.First().BaseAddress+0xD307E8+0x3, 255);
-       // game.WriteValue(modules.First().BaseAddress+0xD307E8+0x4, 255);
-       // game.WriteValue(modules.First().BaseAddress+0xD307E8+0x5, 255);
-       // game.WriteValue(modules.First().BaseAddress+0xD307E8+0x6, 255);
-//
+    if (current.storyline == 1715 && current.partyMembers[4] == 255)
+    {
+        print("Add Auron, Lulu and Wakka after Zu");
+        game.WriteBytes(modules.First().BaseAddress+0xD307E8, new byte[]{0x0, 0x2, 0x5, 0x4, 0xFF, 0xFF, 0xFF});
+        game.WriteValue(modules.First().BaseAddress+0xD321B0, (byte)11);  // Auron
+        game.WriteValue(modules.First().BaseAddress+0xD3236C, (byte)11);  // Lulu
+        game.WriteValue(modules.First().BaseAddress+0xD322D8, (byte)11);  // Wakka
+    }
+
+    if (current.storyline == 1718 && current.partyMembers[5] == 255)
+    {
+        print("Add Kimahri");
+        game.WriteValue(modules.First().BaseAddress+0xD307E8 + 0x5, (byte)3);
+        game.WriteValue(modules.First().BaseAddress+0xD32244, (byte)11);
+    }
+    
+
+
+    
 
     return true;
 }
