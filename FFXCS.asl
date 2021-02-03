@@ -272,13 +272,11 @@ update
     // Guadosalam
     if(current.roomNumber == 141 & current.guado_count == 0)
     {
-        /*int buffer = memory.ReadValue<int>(modules.First().BaseAddress + 0x00F2FF14);
-        game.WriteValue((IntPtr)(buffer + 0x120), 4);*/
-        var deepPtr = new DeepPointer("FFX.exe", 0x00F2FF14);
-        uint addr;
-        if(!deepPtr.Deref<uint>(game, out addr))
+        var deepPtr = new DeepPointer("FFX.exe", 0x00F2FF14, 0x120);
+        IntPtr ptr;
+        if(!deepPtr.DerefOffsets(game, out ptr))
             throw new Exception("Couldn't read the pointer path.");
-        game.WriteValue((IntPtr)(addr+0x120), 4);
+        game.WriteValue(ptr, 4);
     }
     if(current.guado_count == 5 && old.guado_count == 4)
     {
