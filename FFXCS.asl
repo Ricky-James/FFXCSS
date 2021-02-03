@@ -26,6 +26,8 @@ state("FFX")
     byte airshipDestinations: "FFX.exe", 0xD2D710;
     short auronOverdrives: "FFX.exe", 0xD307FC;
     byte7 partyMembers: "FFX.exe", 0xD307E8;
+
+    byte guado_count: "FFX.exe", 0x00F2FF14, 0x120;
 }
 
 
@@ -128,7 +130,6 @@ update
     //game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 7); // Spawn Point
     //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 191); // Area
     //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1612);
-    
 
     // End any battle by holding start + select
     if (current.input == 2304 && current.battleState == 10)
@@ -269,16 +270,15 @@ update
 	}
 
     // Guadosalam
-    if(current.roomNumber == 141 & current.guado_count == 1)
+    if(current.roomNumber == 141 & current.guado_count == 0)
     {
-        //int buffer = memory.ReadValue<int>(modules.First().BaseAddress + 0x00F2FF14);
-        //game.WriteValue((IntPtr)(buffer + 0x120), 4);
-        //print("hello!");
-        var deepPtr = new DeepPointer("FFX.exe", 0x00F2FF14, 0x120);
+        /*int buffer = memory.ReadValue<int>(modules.First().BaseAddress + 0x00F2FF14);
+        game.WriteValue((IntPtr)(buffer + 0x120), 4);*/
+        var deepPtr = new DeepPointer("FFX.exe", 0x00F2FF14);
         uint addr;
-        if (!deepPtr.Deref<uint>(game, out addr)){
-            throw new Exception("Couldn't read the pointer path.");}
-        game.WriteValue((IntPtr)addr, 4);
+        if(!deepPtr.Deref<uint>(game, out addr))
+            throw new Exception("Couldn't read the pointer path.");
+        game.WriteValue((IntPtr)(addr+0x120), 4);
     }
     if(current.guado_count == 5 && old.guado_count == 4)
     {
