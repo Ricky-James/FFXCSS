@@ -17,6 +17,7 @@ state("FFX")
 
     int battleState: "FFX.exe", 0xD2C9F0;
     sbyte gameState: "FFX.exe", 0xD381AC; // -1 Loading screen, 0 = open world, 1 = cutscene, 2 = battle
+    byte encounterStatus: "FFX.exe", 0xF25D70;
 
     byte movementLock: "FFX.exe", 0xF25B63;
     byte musicID: "FFX.exe", 0xF2FF1C;
@@ -26,6 +27,7 @@ state("FFX")
     byte airshipDestinations: "FFX.exe", 0xD2D710;
     short auronOverdrives: "FFX.exe", 0xD307FC;
     byte7 partyMembers: "FFX.exe", 0xD307E8;
+    byte sandragoras: "FFX.exe", 0xD2CD4E;
 }
 
 
@@ -116,6 +118,7 @@ startup
                                     {16000, 1485, 192, 1504, 1}, // Crawler
                                     {1200, 1570, 54, 1600, 0},   // Wendigo (Guard)
                                     {12000, 1704, 129, 1715, 0}, // Bikanel Zu
+                                    {9000, 1885, 280, 1940, 4},  // Home Chimera
                                     {70000, 2555, 285, 2585, 2}  // Flux */
                                     };
     vars.boss_fight = -1;
@@ -125,8 +128,8 @@ update
 {
     //// For testing spawn points:
     //game.WriteValue(modules.First().BaseAddress+0xF3080C, 0); // Force Load
-    //game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 7); // Spawn Point
-    //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 191); // Area
+    //game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); // Spawn Point
+    //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 230); // Area
     //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1612);
     
 
@@ -853,7 +856,7 @@ update
 
     }
 
-    if (current.storyline == 1715 && current.partyMembers[4] == 255)
+    if (current.storyline == 1715 && current.partyMembers[3] == 255)
     {
         print("Add Auron, Lulu and Wakka after Zu");
         game.WriteBytes(modules.First().BaseAddress+0xD307E8, new byte[]{0x0, 0x2, 0x5, 0x4, 0xFF, 0xFF, 0xFF});
@@ -862,16 +865,53 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD322D8, (byte)11);  // Wakka
     }
 
-    if (current.storyline == 1718 && current.partyMembers[5] == 255)
+    if (current.roomNumber == 136 && current.storyline == 1715 && 
+        current.partyMembers[4] == 255 && current.gameState == 1)
     {
         print("Add Kimahri");
-        game.WriteValue(modules.First().BaseAddress+0xD307E8 + 0x5, (byte)3);
+        game.WriteValue(modules.First().BaseAddress+0xD307E8 + 0x4, (byte)3);
         game.WriteValue(modules.First().BaseAddress+0xD32244, (byte)11);
+        // There's no good spawn for reloading this cutscene
+        // and since it's short I think we should leave it for now
     }
-    
+
+    if (current.roomNumber == 136 && current.storyline == 1718 &&
+        current.partyMembers[5] == 255 && current.gameState == 1)
+    {
+        print("Add Rikku");
+        game.WriteValue(modules.First().BaseAddress+0xD307E8 + 0x5, (byte)6);
+        game.WriteValue(modules.First().BaseAddress+0xD32244, (byte)11);
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1720); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 3); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+
+    }
+
+    if (current.roomNumber == 138 && current.storyline == 1720 && 
+        current.gameState == 1 && current.sandragoras >= 4)
+    {
+        print("Sanubia to Home");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 130); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1800); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    } 
+
+    if (current.storyline == 1940 && current.encounterStatus == 89)
+    {
+        print("Kimahri goes now - Disable encounters");
+        game.WriteValue(modules.First().BaseAddress+0xF25D70, 88); //Disable encounters
+    } 
+
+    if (current.roomNumber == 261 && current.storyline == 1940)
+    {
+        print("Home to Airship");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 194); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1950); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
+    }
 
 
-    
 
     return true;
 }

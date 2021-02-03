@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="utf-8"?>
+<CheatTable CheatEngineTableVersion="34">
+  <CheatEntries>
+    <CheatEntry>
+      <ID>3</ID>
+      <Description>"AreaID"</Description>
+      <LastState Value="211" RealAddress="012ACA90"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <Color>FF00FF</Color>
+      <VariableType>2 Bytes</VariableType>
+      <Address>FFX.exe+D2CA90</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>2</ID>
+      <Description>"CutsceneID"</Description>
+      <LastState Value="2040" RealAddress="012AD67C"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <Color>FF00FF</Color>
+      <VariableType>2 Bytes</VariableType>
+      <Address>FFX.exe+D2D67C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>60</ID>
+      <Description>"InCutscene"</Description>
+      <LastState Value="0" RealAddress="012B81AC"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>"FFX.exe"+D381AC</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>27</ID>
+      <Description>""Cutscene""</Description>
+      <LastState Value="217" RealAddress="012A7C88"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>FFX.exe+D27C88</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>4</ID>
+      <Description>"SpawnPoint"</Description>
+      <LastState Value="1" RealAddress="012ACA9C"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>FFX.exe+D2CA9C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>40</ID>
+      <Description>"Zanarkand Kids/Girls progress"</Description>
+      <LastState Value="520727299" RealAddress="012ACE7C"/>
+      <VariableType>4 Bytes</VariableType>
+      <Address>FFX.exe+D2CE7C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>39</ID>
+      <Description>"BattleState"</Description>
+      <LastState Value="778" RealAddress="012AC9F0"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>2 Bytes</VariableType>
+      <Address>FFX.exe+D2C9F0</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>21</ID>
+      <Description>"ForceLoad"</Description>
+      <LastState Value="0" RealAddress="014B080C"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>FFX.exe+F3080C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>8</ID>
+      <Description>"Movement Lock"</Description>
+      <LastState Value="32" RealAddress="014A5B63"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>FFX.exe+F25B63</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>11</ID>
+      <Description>"CameraRot"</Description>
+      <LastState Value="0" RealAddress="00E2858C"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>FFX.exe+8A858C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>13</ID>
+      <Description>"XPos"</Description>
+      <LastState Value="11.11496925" RealAddress="014A5D80"/>
+      <ShowAsSigned>1</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>FFX.exe+F25D80</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>12</ID>
+      <Description>"YPos"</Description>
+      <LastState Value="1.12685883" RealAddress="014A5D78"/>
+      <ShowAsSigned>1</ShowAsSigned>
+      <VariableType>Float</VariableType>
+      <Address>FFX.exe+F25D78</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>22</ID>
+      <Description>"Menu"</Description>
+      <LastState Value="0" RealAddress="014C07E4"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>FFX.exe+F407E4</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>28</ID>
+      <Description>"MonHP-A-Pointer"</Description>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>4 Bytes</VariableType>
+      <Address>FFX.exe+D34460</Address>
+      <Offsets>
+        <Offset>0x5D0</Offset>
+      </Offsets>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>49</ID>
+      <Description>"?? Seems interesting"</Description>
+      <LastState Value="0" RealAddress="01A654E1"/>
+      <VariableType>Byte</VariableType>
+      <Address>FFX.exe+14E54E1</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>48</ID>
+      <Description>"PartyMembers"</Description>
+      <LastState Value="0 2 5 4 3 6 255" RealAddress="012B07E8"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Array of byte</VariableType>
+      <ByteLength>7</ByteLength>
+      <Address>"FFX.exe"+D307E8</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>50</ID>
+      <Description>"TidusGrey"</Description>
+      <LastState Value="27" RealAddress="012B2088"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>"FFX.exe"+D32088</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>51</ID>
+      <Description>"YunaGrey"</Description>
+      <LastState Value="0" RealAddress="012B211C"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>"FFX.exe"+D3211C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>55</ID>
+      <Description>"WakkaGrey"</Description>
+      <LastState Value="11" RealAddress="012B22D8"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>FFX.exe+D322D8</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>56</ID>
+      <Description>"KimahriGrey"</Description>
+      <LastState Value="11" RealAddress="012B2244"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>FFX.exe+D32244</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>57</ID>
+      <Description>"AuronGrey"</Description>
+      <LastState Value="11" RealAddress="012B21B0"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>FFX.exe+D321B0</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>58</ID>
+      <Description>"LuluGrey"</Description>
+      <LastState Value="11" RealAddress="012B236C"/>
+      <ShowAsSigned>0</ShowAsSigned>
+      <VariableType>Byte</VariableType>
+      <Address>FFX.exe+D3236C</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>62</ID>
+      <Description>"EncounterBool"</Description>
+      <LastState Value="89" RealAddress="014A5D70"/>
+      <VariableType>2 Bytes</VariableType>
+      <Address>FFX.exe+F25D70</Address>
+    </CheatEntry>
+    <CheatEntry>
+      <ID>59</ID>
+      <Description>"Hidden"</Description>
+      <Options moManualExpandCollapse="1"/>
+      <LastState Value="" RealAddress="00000000"/>
+      <GroupHeader>1</GroupHeader>
+      <CheatEntries>
+        <CheatEntry>
+          <ID>18</ID>
+          <Description>"AreaID-2"</Description>
+          <LastState Value="211" RealAddress="00E4B990"/>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+8CB990</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>17</ID>
+          <Description>"AreaID-3"</Description>
+          <LastState Value="211" RealAddress="0147BBF8"/>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+EFBBF8</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>16</ID>
+          <Description>"AreaID-4"</Description>
+          <LastState Value="211" RealAddress="014B0804"/>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+F30804</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>19</ID>
+          <Description>"AreaID-5"</Description>
+          <LastState Value="211" RealAddress="012ACB4A"/>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+D2CB4A</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>20</ID>
+          <Description>"AreaID-6"</Description>
+          <LastState Value="211" RealAddress="012ACB50"/>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+D2CB50</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>41</ID>
+          <Description>"CutsceneID-2"</Description>
+          <LastState Value="2040" RealAddress="00DC94A0"/>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+8494A0</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>42</ID>
+          <Description>"CutsceneID-3"</Description>
+          <LastState Value="2040" RealAddress="012AD67C"/>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+D2D67C</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>43</ID>
+          <Description>"Auron abilities"</Description>
+          <LastState Value="65535" RealAddress="012B07FC"/>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+D307FC</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>25</ID>
+          <Description>"Input"</Description>
+          <LastState Value="0" RealAddress="00E4B170"/>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+8CB170</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>6</ID>
+          <Description>"MinimapTransparency"</Description>
+          <LastState Value="6" RealAddress="01ABBF74"/>
+          <ShowAsSigned>1</ShowAsSigned>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+153BF74</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>7</ID>
+          <Description>"CameraOveride"</Description>
+          <LastState Value="0" RealAddress="012B818C"/>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+D3818C</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>9</ID>
+          <Description>"Music"</Description>
+          <LastState Value="11" RealAddress="014AFF1C"/>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Byte</VariableType>
+          <Address>FFX.exe+F2FF1C</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>23</ID>
+          <Description>"Pause"</Description>
+          <LastState Value="0" RealAddress="014C080C"/>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>Byte</VariableType>
+          <Address>FFX.exe+F4080C</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>24</ID>
+          <Description>"SunkenCave"</Description>
+          <LastState Value="0" RealAddress="012ACD09"/>
+          <VariableType>Byte</VariableType>
+          <Address>FFX.exe+D2CD09</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>31</ID>
+          <Description>"AirshipDestinations"</Description>
+          <LastState Value="0" RealAddress="012AD710"/>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+D2D710</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>45</ID>
+          <Description>"NE Armour NE"</Description>
+          <LastState Value="286" RealAddress="012AA9D6"/>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+D2A9D6</Address>
+        </CheatEntry>
+        <CheatEntry>
+          <ID>61</ID>
+          <Description>"Sandragoras"</Description>
+          <LastState Value="4" RealAddress="012ACD4E"/>
+          <ShowAsSigned>0</ShowAsSigned>
+          <VariableType>2 Bytes</VariableType>
+          <Address>FFX.exe+D2CD4E</Address>
+        </CheatEntry>
+      </CheatEntries>
+    </CheatEntry>
+  </CheatEntries>
+  <UserdefinedSymbols/>
+</CheatTable>
