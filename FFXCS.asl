@@ -129,10 +129,11 @@ startup
 update
 {
     //// For testing spawn points:
-game.WriteValue(modules.First().BaseAddress+0xF3080C, 0); // Force Load
-//game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); // Spawn Point
-game.WriteValue(modules.First().BaseAddress+0xD2CA90, 226); // Area
-game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2150);//
+    //game.WriteValue(modules.First().BaseAddress+0xF3080C, 0); // Force Load
+    //game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); // Spawn Point
+    //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 226); // Area
+    //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2150); // Story
+
     // End any battle by holding start + select
     if (current.input == 2304 && current.battleState == 10)
     {
