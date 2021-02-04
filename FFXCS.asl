@@ -120,6 +120,7 @@ startup
                                     {1200, 1570, 54, 1600, 0},   // Wendigo (Guard)
                                     {12000, 1704, 129, 1715, 0}, // Bikanel Zu
                                     {9000, 1885, 280, 1940, 4},  // Home Chimera
+                                    //{32000, 2050, 205, 2080, 0},
                                     {70000, 2555, 285, 2585, 2}  // Flux */
                                     };
     vars.boss_fight = -1;
@@ -128,11 +129,10 @@ startup
 update
 {
     //// For testing spawn points:
-    //game.WriteValue(modules.First().BaseAddress+0xF3080C, 0); // Force Load
-    //game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); // Spawn Point
-    //game.WriteValue(modules.First().BaseAddress+0xD2CA90, 230); // Area
-    //game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1612);
-
+game.WriteValue(modules.First().BaseAddress+0xF3080C, 0); // Force Load
+//game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); // Spawn Point
+game.WriteValue(modules.First().BaseAddress+0xD2CA90, 226); // Area
+game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2150);//
     // End any battle by holding start + select
     if (current.input == 2304 && current.battleState == 10)
     {
@@ -1090,6 +1090,47 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
     }
 
+    if (current.roomNumber == 194 && current.storyline == 1990)
+    {
+        print("Generic Airship bridge cutscene (out and back in)");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2000); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
+    } 
+
+    if (current.roomNumber == 194 && current.storyline == 2000 &&
+         current.gameState == 0 && current.xCoords > 300)
+    {
+        //Xpos check is necessary as gamestate changes when switching between corridor and bridge
+        print("Brother - Bevelle zoom -> Evrae");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 194); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2020); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
+    }
+
+    if (current.roomNumber == 351 && current.storyline == 2020)
+    {
+        print("The red carpet has teeth");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2040); //CutsceneID
+    }
+
+    if (current.roomNumber == 205 && current.storyline == 2060 && current.gameState == 1)
+    {
+        // Can't add Evrae to boss array as force loading from FMVs causes the  game to hang
+        print("Evrae to Guards");
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2075); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 0); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 205 && current.storyline == 2085)
+    {
+        // Can't add Evrae to boss array as force loading from FMVs causes the  game to hang
+        print("Bevelle Guards to Trials");
+        game.WriteValue(modules.First().BaseAddress+0xD2CA90, 180); //AreaID
+        game.WriteValue(modules.First().BaseAddress+0xD2D67C, 2135); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
 
 
     return true;
