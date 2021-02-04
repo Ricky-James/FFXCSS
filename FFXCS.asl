@@ -286,7 +286,8 @@ update
             throw new Exception("Couldn't read the pointer path.");
         game.WriteValue(ptr, 4);
     }
-    if(current.guado_count == 5 && old.guado_count == 4)
+    
+    if(current.roomNumber == 141 && current.guado_count == 5 && old.guado_count == 4)
     {
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 163); // Set the zone
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 1156); // Set the story
@@ -679,6 +680,7 @@ update
     {
         print("Luca - Wakka is injured");
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 518); //CutsceneID
+        game.WriteValue(modules.First().BaseAddress+0xD2CDE5, (byte)11); // Special flag to indicate when scene has been played
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1797); //Spawn
     }
 
@@ -723,6 +725,7 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 89); //Area ID
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 617); //CutsceneID
         game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 1); //Spawn
+        game.WriteValue(modules.First().BaseAddress+0xD2CDE3, (byte)1); // Special flag to indicate when scene has been played
         game.WriteValue(modules.First().BaseAddress+0xD321B0, (byte)17); //Enable Auron
         // Bit far from the centre of the dock, have to run far for the chests
     }
@@ -995,6 +998,31 @@ update
         game.WriteValue(modules.First().BaseAddress+0xD2CA90, 254); //Area ID
         game.WriteValue(modules.First().BaseAddress+0xD2D67C, 922); //CutsceneID
         game.WriteValue(modules.First().BaseAddress+0xF3080C, 1); //Force load
+    }
+
+    if (current.roomNumber == 123 && current.storyline == 450)
+    {
+        print("Luca - Camera pan");
+        game.WriteValue(modules.First().BaseAddress+0xD2CDE5, (byte)8); // Special flag to indicate when scene has been played
+    }
+
+    if (current.roomNumber == 104 && current.storyline == 455)
+    {
+        print("Luca - Tidus and Yuna talk about Luca");
+        game.WriteValue(modules.First().BaseAddress+0xD2CDE4, (byte)2); // Special flag to indicate when scene has been played
+    }
+
+    if (current.roomNumber == 88 && current.storyline == 500)
+    {
+        print("Luca - Wakka won't last");
+        game.WriteValue(modules.First().BaseAddress+0xD2CDE5, (byte)9); // Special flag to indicate when scene has been played
+        game.WriteValue(modules.First().BaseAddress+0xD2CA9C, 2); //Spawn
+    }
+
+    if (current.roomNumber == 58 && current.storyline == 767)
+    {
+        print("Mi'ihen - To the chocobo corral");
+        game.WriteValue(modules.First().BaseAddress+0xD2CD00, (byte)1); // Special flag to indicate when scene has been played
     }
     
     if (current.roomNumber == 54 && current.storyline == 1600)
